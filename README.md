@@ -9,8 +9,17 @@ hope this won't end up as a huge mess.
 How to install
 --------------
 
-Install homeshick, add this castle and make sure the Vundle submodule is
-correctly initialised with it.
+Install homeshick, and add this castle and oh-my-zsh:
+
+    homeshick clone jaapz/dots
+    homeshick clone robbyrussell/oh-my-zsh
+
+Then symlink stuff to the home dir:
+
+    homeshick symlink
+
+Refer to the homeshick docs to see how new files should be added, and how files
+should be changed.
 
 Included
 --------
