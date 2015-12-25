@@ -9,9 +9,11 @@ hope this won't end up as a huge mess.
 How to install
 --------------
 
-Install homeshick, and add this castle and oh-my-zsh:
+Install homeshick, and add a few repo's:
 
     homeshick clone jaapz/dots
+    homeshick clone jaapz/virtualen-tools
+    homeshick clone jaapz/zsh-scripts
     homeshick clone robbyrussell/oh-my-zsh
 
 Then symlink stuff to the home dir:
