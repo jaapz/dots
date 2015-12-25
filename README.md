@@ -9,16 +9,9 @@ hope this won't end up as a huge mess.
 How to install
 --------------
 
-Install homeshick, and add a few repo's:
+Run the setup.sh file like this:
 
-    homeshick clone jaapz/dots
-    homeshick clone jaapz/virtualen-tools
-    homeshick clone jaapz/zsh-scripts
-    homeshick clone robbyrussell/oh-my-zsh
-
-Then symlink stuff to the home dir:
-
-    homeshick symlink
+    $ curl -s https://raw.githubusercontent.com/jaapz/dots/master/setup.sh | bash
 
 Refer to the homeshick docs to see how new files should be added, and how files
 should be changed.
