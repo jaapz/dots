@@ -33,3 +33,10 @@ This repository contains my configurations for these tools:
  * i3
  * tmux
  * vim
+ * zsh
+
+Unison setup
+------------
+
+To set up unison for syncing files across your computers, run
+`backup/setup.sh`.
