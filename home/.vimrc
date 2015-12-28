@@ -43,6 +43,7 @@ set splitright
 
 " Fold using syntax files
 set foldmethod=syntax
+set nofoldenable
 
 " Pythonic indents
 set shiftwidth=4
