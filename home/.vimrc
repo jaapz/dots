@@ -80,8 +80,13 @@ set backspace=indent,eol,start
 colorscheme kolor
 set t_Co=256
 
-" Make supertab move down the list by default
-let g:SuperTabDefaultCompletionType = "<c-n>"
+" Let supertab figure out which completion to use based on context, and make
+" the enter key "accept" the completion suggestion.
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabCrMapping = 1
+
+" Automatically change the CWD with the file we are currently editing
+set autochdir
 
 " Vim-airline config
 let g:airline_left_sep = ''
@@ -105,8 +110,7 @@ set grepprg=ag
 map <C-b> :CtrlPBuffer<CR>
 
 " Python mode settings
-let g:pymode_lint = 0
-let g:pymode_lint_cwindow = 0
+let g:pymode_lint = 0  " Syntastic handles linting
 let g:pymode_rope_complete_on_dot = 1
 let g:pymode_rope_autoimport = 0
 let g:pymode_lint_ignore = "F0401"
@@ -120,6 +124,10 @@ set completeopt-=preview
 " Syntastic
 let g:syntastic_javascript_checkers = ["eslint"]
 let g:syntastic_python_checkers = ["flake8"]
+
+" Delimitmate
+let g:delimitMate_jump_expansion = 1
+let g:delimitMate_expand_cr = 2
 
 " Buffers
 noremap <leader>/ <Esc>:bn<CR>
