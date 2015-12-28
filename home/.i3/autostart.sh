@@ -8,12 +8,6 @@ eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 ## Volume control for systray
 (sleep 2s && pnmixer) &
 
-## Volume keys daemon
-xfce4-volumed &
-
-## Enable power management
-xfce4-power-manager &
-
 ## Start Thunar Daemon
 thunar --daemon &
 
