@@ -16,7 +16,7 @@ Plugin 'klen/python-mode'
 Plugin 'othree/yajs.vim'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'FelikZ/ctrlp-py-matcher'
-Plugin 'sjl/badwolf'
+Plugin 'zeis/vim-kolor'
 
 " Nicer statusline
 Plugin 'bling/vim-airline'
@@ -76,7 +76,7 @@ set nowritebackup
 set backspace=indent,eol,start
 
 " Enable colorscheme and 256 colors
-colorscheme badwolf
+colorscheme kolor
 set t_Co=256
 
 " Make supertab move down the list by default
@@ -85,7 +85,7 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 " Vim-airline config
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
-let g:airline_theme = 'wombat'
+let g:airline_theme = 'kolor'
 let g:bufferline_fixed_index = 0
 set laststatus=2 " Always show statusline
 set noshowmode
