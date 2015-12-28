@@ -34,8 +34,8 @@ bindsym $mod+semicolon exec slock
 bindsym $mod+Shift+semicolon exec cb-exit
 
 # edit volume
-bindsym $mod+equal exec pactl set-sink-volume 1 +5%
-bindsym $mod+minus exec pactl set-sink-volume 1 -- -5%
+bindsym $mod+equal exec pactl set-sink-volume 0 +5%
+bindsym $mod+minus exec pactl set-sink-volume 0 -- -5%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -- -5%
 bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
