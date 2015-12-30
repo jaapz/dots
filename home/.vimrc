@@ -93,6 +93,7 @@ let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_theme = 'kolor'
 let g:bufferline_fixed_index = 0
+let g:bufferline_echo = 0
 set laststatus=2 " Always show statusline
 set noshowmode
 
@@ -127,7 +128,8 @@ let g:syntastic_python_checkers = ["flake8"]
 
 " Delimitmate
 let g:delimitMate_jump_expansion = 1
-let g:delimitMate_expand_cr = 2
+let g:delimitMate_expand_cr = 1
+let g:delimitMate_expand_space = 1
 
 " Buffers
 noremap <leader>/ <Esc>:bn<CR>
