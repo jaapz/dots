@@ -34,6 +34,11 @@ set nocompatible " No vi compatibility
 set cursorline " Highlight current line
 set so=5
 
+" When opening a new buffer while the current one has changed and not saved,
+" just 'hide' it and switch to the new buffer, instead of opening the new
+" buffer in a vsplit or asking to save every time this happens.
+set hidden
+
 " Search settings
 set hlsearch
 set incsearch
