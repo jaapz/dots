@@ -53,6 +53,8 @@ fi
 alias docker="sudo /usr/bin/docker"
 alias pynt="noglob pynt"
 alias irc-remote="ssh jaapz@broekhuizen.nu -t 'tmux attach -t weechat'"
+alias vim="vim --servername mbo"
+alias v="vim --servername mbo --remote-silent"
 
 source ~/.homesick/repos/virtualenv-tools/virtualenv.sh
 source ~/.homesick/repos/zsh-scripts/start-ssh-agent.sh
