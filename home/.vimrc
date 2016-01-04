@@ -73,7 +73,7 @@ set wildignore+=*/vendor/*
 
 " Show max text width
 set textwidth=79
-set colorcolumn=79
+set colorcolumn=79,119
 
 " No backups
 set nowritebackup 
