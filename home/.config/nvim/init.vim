@@ -15,7 +15,7 @@ Plug 'zeis/vim-kolor'
 
 " Nicer statusline
 Plug 'bling/vim-airline', { 'tag': 'v0.7' }
-Plug 'bling/vim-bufferline', {'tag': 'v0.3' }
+Plug 'bling/vim-bufferline'
 
 " Plug cleaunup
 call plug#end()
@@ -92,7 +92,6 @@ set autochdir
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_theme = 'kolor'
-let g:airline#extensions#bufferline#overwrite_variables = 0
 let g:bufferline_fixed_index = 0
 let g:bufferline_echo = 0
 set laststatus=2 " Always show statusline
