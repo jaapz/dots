@@ -26,7 +26,14 @@ This repository contains my configurations for these tools:
  * i3
  * tmux
  * vim
+ * neovim (still experimental)
  * zsh
+
+Neovim
+------
+
+For neovim and corresponding aliases to work correctly, make sure to [install
+neovim-remote](https://github.com/mhinz/neovim-remote#installation).
 
 Unison setup
 ------------

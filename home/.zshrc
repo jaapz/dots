@@ -53,8 +53,9 @@ fi
 alias docker="sudo /usr/bin/docker"
 alias pynt="noglob pynt"
 alias irc-remote="ssh jaapz@broekhuizen.nu -t 'tmux attach -t weechat'"
-alias vim="vim --servername mbo"
+alias vims="vim --servername mbo"
 alias v="vim --servername mbo --remote-silent"
+alias nv="nvr --remote"
 
 source ~/.homesick/repos/virtualenv-tools/virtualenv.sh
 source ~/.homesick/repos/zsh-scripts/start-ssh-agent.sh
@@ -66,3 +67,5 @@ export NVM_DIR="/home/jaapz/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+
+export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
