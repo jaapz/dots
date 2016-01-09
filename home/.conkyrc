@@ -1,0 +1,24 @@
+##############################################
+# Settings for running in i3bar
+##############################################
+out_to_x no
+own_window no
+out_to_console yes
+background no
+max_text_width 0
+update_interval 1.0
+total_run_times 0
+short_units yes
+if_up_strictness address
+use_spacer left
+override_utf8_locale no
+cpu_avg_samples 2
+
+TEXT
+
+[${if_mpd_playing}{"full_text": "${if_match "${mpd_status}" == "Playing"}▶${endif} $mpd_title - $mpd_artist", "color": "\#daf0ff"},${endif}
+ {"full_text": "cpu ${cpu}%", "color": ${if_match ${memperc}<90}"\#c7c7c7"${else}"\#ff0000"${endif}},
+ {"full_text": "ram ${memperc}%", "color": ${if_match ${memperc}<90}"\#c7c7c7"${else}"\#ff0000"${endif}},
+ {"full_text": "bat ${battery_percent BAT1}%", "color": "\#c7c7c7"},
+ {"full_text": "${time %H:%M}"}
+],
