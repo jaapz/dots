@@ -184,7 +184,7 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         position top
-        #status_command $HOME/.i3/conky.sh
+        status_command $HOME/.i3/conky.sh
 }
 
 # colors
