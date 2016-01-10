@@ -151,8 +151,9 @@ bindsym mod4+Shift+s move scratchpad
 bindsym mod4+s scratchpad show
 
 # screen brightness
-bindsym XF86MonBrightnessUp exec "xbacklight -inc 20"
-bindsym XF86MonBrightnessDown exec "xbacklight -dec 20"
+bindsym F5 exec "xbacklight -dec 5"
+bindsym F6 exec "xbacklight -inc 5"
+
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
