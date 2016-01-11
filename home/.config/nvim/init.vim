@@ -122,9 +122,10 @@ let g:pymode_breakpoint_cmd = 'import pytest;pytest.set_trace()'
 " Don't show documentation in preview when autocompleting
 set completeopt-=preview
 
-" Syntastic
+" Neomake
 let g:neomake_javascript_enabled_makers = ["eslint"]
 let g:neomake_python_enabled_makers = ["flake8"]
+autocmd BufWritePost * silent Neomake
 
 " Delimitmate
 let g:delimitMate_jump_expansion = 1
