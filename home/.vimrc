@@ -47,7 +47,7 @@ set incsearch
 set splitright
 
 " Fold using syntax files
-set foldmethod=syntax
+set foldmethod=indent
 set nofoldenable
 
 " Pythonic indents
