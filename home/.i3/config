@@ -151,8 +151,8 @@ bindsym mod4+Shift+s move scratchpad
 bindsym mod4+s scratchpad show
 
 # screen brightness
-bindsym F5 exec "xbacklight -dec 5"
-bindsym F6 exec "xbacklight -inc 5"
+bindsym $mod+F5 exec "xbacklight -dec 5"
+bindsym $mod+F6 exec "xbacklight -inc 5"
 
 
 # resize window (you can also use the mouse for that)
