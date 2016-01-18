@@ -36,7 +36,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git git-extras colorize python gpg-agent fab tmux homeshick extract)
+plugins=(git git-extras colorize python gpg-agent fabric tmux homeshick extract)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -55,7 +55,6 @@ alias pynt="noglob pynt"
 alias irc-remote="ssh jaapz@broekhuizen.nu -t 'tmux attach -t weechat'"
 alias vims="vim --servername mbo"
 alias v="vim --servername mbo --remote-silent"
-alias nv="nvr --remote"
 
 source ~/.homesick/repos/virtualenv-tools/virtualenv.sh
 source ~/.homesick/repos/zsh-scripts/start-ssh-agent.sh
@@ -69,3 +68,9 @@ export NVM_DIR="/home/jaapz/.nvm"
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
+
+# Always send absolute paths to nvim because otherwise nvim won't find the file
+# as it will look relatively to it's current working directory.
+function nv() {
+    nvr --remote $(realpath $1)
+}
