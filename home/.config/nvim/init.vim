@@ -13,6 +13,9 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'zeis/vim-kolor'
 
+" Javascript tools
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+
 " Nicer statusline
 Plug 'bling/vim-airline', { 'tag': 'v0.7' }
 Plug 'bling/vim-bufferline'
