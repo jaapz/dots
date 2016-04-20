@@ -10,7 +10,6 @@ Plug 'benekastah/neomake'
 Plug 'klen/python-mode'
 Plug 'othree/yajs.vim'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'zeis/vim-kolor'
 
 " Javascript tools
@@ -70,8 +69,8 @@ set wildignore+=*/app/cache/*
 set wildignore+=*/vendor/*
 
 " Show max text width
-set textwidth=79
-set colorcolumn=79,119
+set textwidth=78
+set colorcolumn=78,118
 
 " No backups
 set nowritebackup 
@@ -105,7 +104,6 @@ let g:ctrlp_max_height = 20
 let g:ctrlp_max_files = 0                                                      
 let g:ctrlp_clear_cache_on_exit = 0                                            
 let g:ctrlp_use_caching = 0
-let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }                      
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
 " Use ag!
