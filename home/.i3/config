@@ -50,6 +50,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec rofi -show run -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
 bindsym $mod+Shift+d exec rofi -show window -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
 bindsym mod4+d exec rofi -show ssh -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
+bindsym $mod+p exec LPASS_CLIPBOARD_COMMAND="xclip -selection primary -in" lpass show -c --password $(lpass ls  | rofi -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -dmenu -i | awk '{print $(NF)}' | sed 's/\]//g')
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.

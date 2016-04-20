@@ -78,5 +78,6 @@ function nv() {
 # Have lpass-cli copy the password to the "primary" clipboard instead to the
 # "clipboard" clipboard.
 export LPASS_CLIPBOARD_COMMAND="xclip -selection primary -in"
+export LPASS_AGENT_TIMEOUT=0
 alias lpc="lpass show -c --password"
 alias lps="lpass ls | ag"
