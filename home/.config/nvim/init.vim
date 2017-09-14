@@ -4,20 +4,35 @@ filetype off
 " Plug setup
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'Raimondi/delimitMate'
-Plug 'ervandew/supertab'
 Plug 'benekastah/neomake'
 Plug 'klen/python-mode'
 Plug 'othree/yajs.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'zeis/vim-kolor'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " Javascript tools
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'ElmCast/elm-vim'
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 
 " Nicer statusline
-Plug 'bling/vim-airline', { 'tag': 'v0.7' }
+Plug 'vim-airline/vim-airline', { 'tag': 'v0.7' }
+Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
+
+" Tickscript
+Plug 'nathanielc/vim-tickscript'
+
+" Typescript
+Plug 'leafgarland/typescript-vim'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'Quramy/tsuquyomi'
+Plug 'mhartington/nvim-typescript'
+
+" Python
+Plug 'zchee/deoplete-jedi'
 
 " Plug cleaunup
 call plug#end()
@@ -54,6 +69,9 @@ set smarttab
 set expandtab
 set tabstop=4
 set softtabstop=4
+
+" Disable auto indent for html files
+au FileType html.handlebars setlocal indentexpr=
 
 " Correct unicode encoding
 set encoding=utf-8
@@ -123,15 +141,28 @@ let g:pymode_breakpoint_cmd = 'import pytest;pytest.set_trace()'
 " Don't show documentation in preview when autocompleting
 set completeopt-=preview
 
+" Start deoplete
+let g:deoplete#enable_at_startup = 1
+
+" Typescript
+autocmd FileType typescript nmap <buffer> <Leader>t : <C-u>echo tsuquyomi#hint()<CR>
+let g:tsuquyomi_disable_quickfix = 1
+
+" Tern for deoplete
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
+
 " Neomake
 let g:neomake_javascript_enabled_makers = ["eslint"]
 let g:neomake_python_enabled_makers = ["flake8"]
-autocmd BufWritePost * silent Neomake
 
-" Delimitmate
-let g:delimitMate_jump_expansion = 1
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_expand_space = 1
+let g:neomake_typescript_enabled_makers = ["tsc"]
+let g:neomake_typescript_tsc_maker = {
+            \ 'args': ['--module', 'commonjs', '--target', 'es6', '--noEmit'] }
+
+let g:neomake_airline = 1
+
+autocmd BufWritePost * silent Neomake
 
 " Buffers
 noremap <leader>/ <Esc>:bn<CR>
