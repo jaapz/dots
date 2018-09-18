@@ -162,6 +162,17 @@ let g:nvim_typescript#tsimport#template = 'import {%s} from ''%s'';'
 let g:tern#command = ["tern"]
 let g:tern#arguments = ["--persistent"]
 
+" Start deoplete
+let g:deoplete#enable_at_startup = 1
+
+" Typescript
+autocmd FileType typescript nmap <buffer> <Leader>t : <C-u>echo tsuquyomi#hint()<CR>
+let g:tsuquyomi_disable_quickfix = 1
+
+" Tern for deoplete
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
+
 " Neomake
 let g:neomake_javascript_enabled_makers = ["eslint"]
 let g:neomake_python_enabled_makers = ["flake8"]
@@ -169,7 +180,6 @@ let g:neomake_python_enabled_makers = ["flake8"]
 let g:neomake_typescript_enabled_makers = ["tsc", "tslint"]
 let g:neomake_typescript_tsc_args = ['--module', 'commonjs', '--target', 'es6', '--noEmit']
 let g:neomake_typescript_tslint_args = ['-p', 'tsconfig.json']
-
 let g:neomake_airline = 1
 
 autocmd BufWritePost * silent Neomake
