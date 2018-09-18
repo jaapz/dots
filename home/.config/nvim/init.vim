@@ -4,20 +4,36 @@ filetype off
 " Plug setup
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'Raimondi/delimitMate'
-Plug 'ervandew/supertab'
 Plug 'benekastah/neomake'
 Plug 'klen/python-mode'
 Plug 'othree/yajs.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'zeis/vim-kolor'
+Plug 'morhetz/gruvbox'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'tpope/vim-commentary'
 
 " Javascript tools
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'ElmCast/elm-vim'
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 
 " Nicer statusline
-Plug 'bling/vim-airline', { 'tag': 'v0.7' }
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
+
+" Tickscript
+Plug 'nathanielc/vim-tickscript'
+
+" Typescript
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
+
+" Python
+Plug 'zchee/deoplete-jedi'
 
 " Plug cleaunup
 call plug#end()
@@ -39,9 +55,10 @@ set hidden
 " Search settings
 set hlsearch
 set incsearch
+set inccommand=split
 
 " Split the Correct(tm) way.
-set splitright
+set splitbelow
 
 " Fold using syntax files
 set foldmethod=indent
@@ -54,6 +71,9 @@ set smarttab
 set expandtab
 set tabstop=4
 set softtabstop=4
+
+" Disable auto indent for html files
+au FileType html.handlebars setlocal indentexpr=
 
 " Correct unicode encoding
 set encoding=utf-8
@@ -79,7 +99,12 @@ set nowritebackup
 set backspace=indent,eol,start
 
 " Enable colorscheme and 256 colors
-colorscheme kolor
+set background=dark
+let g:gruvbox_contrast_dark = "medium"
+let g:gruvbox_improved_string = 1
+let g:gruvbox_improved_warnings = 1
+
+colorscheme gruvbox
 set t_Co=256
 
 " Let supertab figure out which completion to use based on context, and make
@@ -93,7 +118,7 @@ set autochdir
 " Vim-airline config
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
-let g:airline_theme = 'kolor'
+let g:airline_theme = 'gruvbox'
 let g:bufferline_fixed_index = 0
 let g:bufferline_echo = 0
 set laststatus=2 " Always show statusline
@@ -121,17 +146,33 @@ let g:pymode_rope_goto_definition_cmd = 'e'
 let g:pymode_breakpoint_cmd = 'import pytest;pytest.set_trace()'
 
 " Don't show documentation in preview when autocompleting
-set completeopt-=preview
+set completeopt=menuone,noinsert,noselect
+autocmd FileType python inoremap <buffer> . .<C-R><CR>
+
+" Start deoplete
+let g:deoplete#enable_at_startup = 1
+"let g:deoplete#num_processes = 1
+
+" Typescript
+let g:nvim_typescript#type_info_on_hold = 1
+let g:nvim_typescript#default_mappings = 1
+let g:nvim_typescript#tsimport#template = 'import {%s} from ''%s'';'
+
+" Tern for deoplete
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
 
 " Neomake
 let g:neomake_javascript_enabled_makers = ["eslint"]
 let g:neomake_python_enabled_makers = ["flake8"]
-autocmd BufWritePost * silent Neomake
 
-" Delimitmate
-let g:delimitMate_jump_expansion = 1
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_expand_space = 1
+let g:neomake_typescript_enabled_makers = ["tsc", "tslint"]
+let g:neomake_typescript_tsc_args = ['--module', 'commonjs', '--target', 'es6', '--noEmit']
+let g:neomake_typescript_tslint_args = ['-p', 'tsconfig.json']
+
+let g:neomake_airline = 1
+
+autocmd BufWritePost * silent Neomake
 
 " Buffers
 noremap <leader>/ <Esc>:bn<CR>
