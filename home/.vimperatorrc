@@ -1,7 +1,0 @@
-colorscheme fxdevtools-dark
-set noscrollbars
-set hintchars=asdfghjkl
-set defsearch=duckduckgo
-set gui=none
-set tabnumbers
-set complete=lt
