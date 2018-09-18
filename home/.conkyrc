@@ -21,5 +21,6 @@ TEXT
  {"full_text": "ram ${memperc}%", "color": ${if_match ${memperc}<90}"\#c7c7c7"${else}"\#ff0000"${endif}},
  {"full_text": "bat ${battery_percent BAT0}%", "color": "\#c7c7c7"},
  {"full_text": "${wireless_essid wlp1s0}", "color": "\#c7c7c7"},
+ {"full_text": "${time %a %d %b %Y}"},
  {"full_text": "${time %H:%M}"}
 ],
