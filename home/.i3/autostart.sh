@@ -22,4 +22,4 @@ xset r rate 250 25 &
 xset b off &
 
 ## Set the background
-feh  --bg-scale '/home/jaapz/.wallpaper.png'
+feh  --bg-fill '/home/jaapz/.wallpaper.png'
