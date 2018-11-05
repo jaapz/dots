@@ -35,6 +35,10 @@ Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
 " Python
 Plug 'zchee/deoplete-jedi'
 
+" Go
+Plug 'zchee/deoplete-go', { 'build': 'make' }
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
 " Plug cleaunup
 call plug#end()
 syntax on
@@ -98,6 +102,10 @@ set nowritebackup
 " Why is this not default.
 set backspace=indent,eol,start
 
+" Show tabs/spaces
+set list
+set listchars=tab:>-
+
 " Enable colorscheme and 256 colors
 set background=dark
 let g:gruvbox_contrast_dark = "medium"
@@ -143,6 +151,7 @@ let g:pymode_rope_autoimport = 0
 let g:pymode_lint_ignore = "F0401"
 let g:pymode_rope_goto_definition_bind = '<C-]>'
 let g:pymode_rope_goto_definition_cmd = 'e'
+let g:pymode_rope_lookup_project = 0
 let g:pymode_breakpoint_cmd = 'import pytest;pytest.set_trace()'
 
 " Don't show documentation in preview when autocompleting
@@ -162,6 +171,14 @@ let g:nvim_typescript#tsimport#template = 'import {%s} from ''%s'';'
 let g:tern#command = ["tern"]
 let g:tern#arguments = ["--persistent"]
 
+" Deoplete-go
+let g:deoplete#sources#go#gocode_binary = '/home/jaapz/go/bin/gocode'
+
+" vim-go
+let g:go_def_mode = 'godef'
+let g:go_fmt_fail_silently = 1
+let g:go_fmt_command = "goimports"
+
 " Start deoplete
 let g:deoplete#enable_at_startup = 1
 
@@ -174,13 +191,16 @@ let g:tern#command = ["tern"]
 let g:tern#arguments = ["--persistent"]
 
 " Neomake
+let g:neomake_airline = 1
 let g:neomake_javascript_enabled_makers = ["eslint"]
 let g:neomake_python_enabled_makers = ["flake8"]
-
 let g:neomake_typescript_enabled_makers = ["tsc", "tslint"]
 let g:neomake_typescript_tsc_args = ['--module', 'commonjs', '--target', 'es6', '--noEmit']
 let g:neomake_typescript_tslint_args = ['-p', 'tsconfig.json']
-let g:neomake_airline = 1
+let g:neomake_go_enabled_makers = ["gometalinter"]
+let g:neomake_go_gometalinter_args = ['--disable-all', '--enable=errcheck', '--enable=megacheck', '--enable=golint', '--vendor']
+
+
 
 autocmd BufWritePost * silent Neomake
 
