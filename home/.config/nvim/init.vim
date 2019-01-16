@@ -4,10 +4,16 @@ filetype off
 " Plug setup
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'benekastah/neomake'
+" Plug 'benekastah/neomake'
+Plug 'w0rp/ale'
 Plug 'klen/python-mode'
 Plug 'othree/yajs.vim'
-Plug 'ctrlpvim/ctrlp.vim'
+
+if exists('g:gonvim_running')
+else
+    Plug 'ctrlpvim/ctrlp.vim'
+endif
+
 Plug 'zeis/vim-kolor'
 Plug 'morhetz/gruvbox'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -20,9 +26,12 @@ Plug 'ElmCast/elm-vim'
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 
 " Nicer statusline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'bling/vim-bufferline'
+if exists('g:gonvim_running')
+else
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'bling/vim-bufferline'
+endif
 
 " Tickscript
 Plug 'nathanielc/vim-tickscript'
@@ -38,6 +47,12 @@ Plug 'zchee/deoplete-jedi'
 " Go
 Plug 'zchee/deoplete-go', { 'build': 'make' }
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+" Gonvim
+if exists('g:gonvim_running')
+    Plug 'equalsraf/neovim-gui-shim'
+    Plug 'akiyosi/gonvim-fuzzy'
+endif
 
 " Plug cleaunup
 call plug#end()
@@ -114,6 +129,7 @@ let g:gruvbox_improved_warnings = 1
 
 colorscheme gruvbox
 set t_Co=256
+set termguicolors
 
 " Let supertab figure out which completion to use based on context, and make
 " the enter key "accept" the completion suggestion.
@@ -124,28 +140,55 @@ let g:SuperTabCrMapping = 1
 set autochdir
 
 " Vim-airline config
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline_theme = 'gruvbox'
-let g:bufferline_fixed_index = 0
-let g:bufferline_echo = 0
-set laststatus=2 " Always show statusline
-set noshowmode
+if exists('g:gonvim_running')
+else
+    let g:airline_left_sep = ''
+    let g:airline_right_sep = ''
+    let g:airline_theme = 'gruvbox'
+    let g:bufferline_fixed_index = 0
+    let g:bufferline_echo = 0
+    let g:airline#extensions#ale#enabled = 1
+    set laststatus=2 " Always show statusline
+    set noshowmode
+endif
 
 " CtrlP config
-let g:ctrlp_max_height = 20
-let g:ctrlp_max_files = 0                                                      
-let g:ctrlp_clear_cache_on_exit = 0                                            
-let g:ctrlp_use_caching = 0
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+if exists('g:gonvim_running')
+else
+    let g:ctrlp_max_height = 20
+    let g:ctrlp_max_files = 0                                                      
+    let g:ctrlp_clear_cache_on_exit = 0                                            
+    let g:ctrlp_use_caching = 0
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
+
+" Gonvim settings
+if exists('g:gonvim_running')
+  " Use Gonvim UI instead of vim native UII
+  set laststatus=0
+  set noshowmode
+  set noruler
+  set noautochdir
+
+  " Mapping for gonvim-fuzzy
+  " nnoremap <Ctrl>n :GonvimWorkspaceNext<CR>
+  " nnoremap <Ctrl>p :GonvimWorkspacePrevious<CR>
+  nnoremap <C-p> :GonvimFuzzyFiles<CR>
+  " nnoremap <Ctrl>fg :GonvimFuzzyAg<CR>
+  nnoremap <C-b> :GonvimFuzzyBuffers<CR>
+  " nnoremap <C-f> :GonvimFuzzyBLines<CR>
+endif
 
 " Use ag!
 set grepprg=ag
 
-map <C-b> :CtrlPBuffer<CR>
+if exists('g:gonvim_running')
+else
+    map <C-b> :CtrlPBuffer<CR>
+endif
 
 " Python mode settings
-let g:pymode_lint = 0  " Neomake handles linting
+let g:pymode_lint = 0  " Neomake/ALE handles linting
 let g:pymode_rope_complete_on_dot = 1
 let g:pymode_rope_autoimport = 0
 let g:pymode_lint_ignore = "F0401"
@@ -191,18 +234,29 @@ let g:tern#command = ["tern"]
 let g:tern#arguments = ["--persistent"]
 
 " Neomake
-let g:neomake_airline = 1
-let g:neomake_javascript_enabled_makers = ["eslint"]
-let g:neomake_python_enabled_makers = ["flake8"]
-let g:neomake_typescript_enabled_makers = ["tsc", "tslint"]
-let g:neomake_typescript_tsc_args = ['--module', 'commonjs', '--target', 'es6', '--noEmit']
-let g:neomake_typescript_tslint_args = ['-p', 'tsconfig.json']
-let g:neomake_go_enabled_makers = ["gometalinter"]
-let g:neomake_go_gometalinter_args = ['--disable-all', '--enable=errcheck', '--enable=megacheck', '--enable=golint', '--vendor']
+" let g:neomake_airline = 1
+" let g:neomake_javascript_enabled_makers = ["eslint"]
+" let g:neomake_python_enabled_makers = ["flake8"]
+" let g:neomake_typescript_enabled_makers = ["tsc", \"tslint"]
+" let g:neomake_typescript_tsc_args = ['--module', 'commonjs', '--target', 'es6', '--noEmit']
+" let g:neomake_typescript_tslint_args = ['-p', 'tsconfig.json']
+" let g:neomake_go_enabled_makers = ["gometalinter"]
+" let g:neomake_go_gometalinter_args = ['--disable-all', '--enable=errcheck', '--enable=megacheck', '--enable=golint', '--vendor']
+" 
+" autocmd BufWritePost * silent Neomake
 
+" Ale configuration
+let g:ale_linters_explicit = 1
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\   'python': ['flake8'],
+\   'typescript': ['tsserver'],
+\   'go': ['gometalinter', 'goimports', 'golint', 'govet'],
+\}
 
-
-autocmd BufWritePost * silent Neomake
+let g:ale_go_gometalinter_options = '--disable-all --enable=errcheck --enable=megacheck --vendor'
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠️'
 
 " Buffers
 noremap <leader>/ <Esc>:bn<CR>
