@@ -4,26 +4,25 @@ filetype off
 " Plug setup
 call plug#begin('~/.config/nvim/plugged')
 
-" Plug 'benekastah/neomake'
+" Linting & completion
 Plug 'w0rp/ale'
-Plug 'klen/python-mode'
-Plug 'othree/yajs.vim'
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 if exists('g:gonvim_running')
 else
     Plug 'ctrlpvim/ctrlp.vim'
 endif
 
-Plug 'zeis/vim-kolor'
+" Color scheme
 Plug 'morhetz/gruvbox'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+" Easier commenting
 Plug 'tpope/vim-commentary'
 
 " Javascript tools
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'ElmCast/elm-vim'
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'othree/yajs.vim'
 
 " Nicer statusline
 if exists('g:gonvim_running')
@@ -38,21 +37,15 @@ Plug 'nathanielc/vim-tickscript'
 
 " Typescript
 Plug 'HerringtonDarkholme/yats.vim'
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
-
-" Python
-Plug 'zchee/deoplete-jedi'
-
-" Go
-Plug 'zchee/deoplete-go', { 'build': 'make' }
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Gonvim
 if exists('g:gonvim_running')
     Plug 'equalsraf/neovim-gui-shim'
     Plug 'akiyosi/gonvim-fuzzy'
 endif
+
+" Python
+Plug 'tmhedberg/SimpylFold'
 
 " Plug cleaunup
 call plug#end()
@@ -80,7 +73,7 @@ set inccommand=split
 set splitbelow
 
 " Fold using syntax files
-set foldmethod=indent
+" set foldmethod=indent
 set nofoldenable
 
 " Pythonic indents
@@ -108,8 +101,8 @@ set wildignore+=*/app/cache/*
 set wildignore+=*/vendor/*
 
 " Show max text width
-set textwidth=78
-set colorcolumn=78,118
+set textwidth=79
+set colorcolumn=79,120
 
 " No backups
 set nowritebackup 
@@ -187,24 +180,6 @@ else
     map <C-b> :CtrlPBuffer<CR>
 endif
 
-" Python mode settings
-let g:pymode_lint = 0  " Neomake/ALE handles linting
-let g:pymode_rope_complete_on_dot = 1
-let g:pymode_rope_autoimport = 0
-let g:pymode_lint_ignore = "F0401"
-let g:pymode_rope_goto_definition_bind = '<C-]>'
-let g:pymode_rope_goto_definition_cmd = 'e'
-let g:pymode_rope_lookup_project = 0
-let g:pymode_breakpoint_cmd = 'import pytest;pytest.set_trace()'
-
-" Don't show documentation in preview when autocompleting
-set completeopt=menuone,noinsert,noselect
-autocmd FileType python inoremap <buffer> . .<C-R><CR>
-
-" Start deoplete
-let g:deoplete#enable_at_startup = 1
-"let g:deoplete#num_processes = 1
-
 " Typescript
 let g:nvim_typescript#type_info_on_hold = 1
 let g:nvim_typescript#default_mappings = 1
@@ -214,36 +189,9 @@ let g:nvim_typescript#tsimport#template = 'import {%s} from ''%s'';'
 let g:tern#command = ["tern"]
 let g:tern#arguments = ["--persistent"]
 
-" Deoplete-go
-let g:deoplete#sources#go#gocode_binary = '/home/jaapz/go/bin/gocode'
-
-" vim-go
-let g:go_def_mode = 'godef'
-let g:go_fmt_fail_silently = 1
-let g:go_fmt_command = "goimports"
-
-" Start deoplete
-let g:deoplete#enable_at_startup = 1
-
 " Typescript
 autocmd FileType typescript nmap <buffer> <Leader>t : <C-u>echo tsuquyomi#hint()<CR>
 let g:tsuquyomi_disable_quickfix = 1
-
-" Tern for deoplete
-let g:tern#command = ["tern"]
-let g:tern#arguments = ["--persistent"]
-
-" Neomake
-" let g:neomake_airline = 1
-" let g:neomake_javascript_enabled_makers = ["eslint"]
-" let g:neomake_python_enabled_makers = ["flake8"]
-" let g:neomake_typescript_enabled_makers = ["tsc", \"tslint"]
-" let g:neomake_typescript_tsc_args = ['--module', 'commonjs', '--target', 'es6', '--noEmit']
-" let g:neomake_typescript_tslint_args = ['-p', 'tsconfig.json']
-" let g:neomake_go_enabled_makers = ["gometalinter"]
-" let g:neomake_go_gometalinter_args = ['--disable-all', '--enable=errcheck', '--enable=megacheck', '--enable=golint', '--vendor']
-" 
-" autocmd BufWritePost * silent Neomake
 
 " Ale configuration
 let g:ale_linters_explicit = 1
@@ -251,12 +199,43 @@ let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'python': ['flake8'],
 \   'typescript': ['tsserver'],
-\   'go': ['gometalinter', 'goimports', 'golint', 'govet'],
+\   'go': ['gometalinter', 'golint', 'govet'],
+\}
+
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+\   'go': ['goimports']
 \}
 
 let g:ale_go_gometalinter_options = '--disable-all --enable=errcheck --enable=megacheck --vendor'
+let g:ale_sign_column_always = 1
 let g:ale_sign_error = '⤫'
 let g:ale_sign_warning = '⚠️'
+let g:ale_open_list = 0
+
+" CoC config
+set nobackup
+set nowritebackup
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
+set cmdheight=2
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <leader>rn <Plug>(coc-rename)
+
+function! s:show_documentation()
+  call CocAction('doHover')
+endfunction
+
+autocmd CursorHold * silent call s:show_documentation()
+
+" SimpylFold
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_import = 0
 
 " Buffers
 noremap <leader>/ <Esc>:bn<CR>
