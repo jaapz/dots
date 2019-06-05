@@ -58,6 +58,7 @@ set number " Always show line numbers
 set nocompatible " No vi compatibility
 set cursorline " Highlight current line
 set so=5
+set nowrap
 
 " When opening a new buffer while the current one has changed and not saved,
 " just 'hide' it and switch to the new buffer, instead of opening the new
@@ -197,14 +198,15 @@ let g:tsuquyomi_disable_quickfix = 1
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
 \   'javascript': ['eslint'],
-\   'python': ['flake8'],
 \   'typescript': ['tsserver'],
 \   'go': ['gometalinter', 'golint', 'govet'],
+\   'python': ['flake8', 'mypy'],
 \}
 
 let g:ale_fix_on_save = 1
 let g:ale_fixers = {
-\   'go': ['goimports']
+\   'go': ['goimports'],
+\   'python': ['black'],
 \}
 
 let g:ale_go_gometalinter_options = '--disable-all --enable=errcheck --enable=megacheck --vendor'
@@ -231,6 +233,7 @@ function! s:show_documentation()
   call CocAction('doHover')
 endfunction
 
+" Show documentation when the cursor is above something interesting
 autocmd CursorHold * silent call s:show_documentation()
 
 " SimpylFold
