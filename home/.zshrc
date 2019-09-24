@@ -41,12 +41,10 @@ plugins=(git git-extras colorize python gpg-agent fabric tmux homeshick extract)
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH=/usr/lib/lightdm/lightdm:/home/jaapz/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+export PATH=/usr/lib/lightdm/lightdm:/home/jaapz/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/home/jaapz/go/bin
 
 if [ -n "$TMUX" ]; then
     export TERM=screen-256color
-else
-    export TERM=st-256color
 fi
 
 # Useful aliases
