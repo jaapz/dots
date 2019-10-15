@@ -8,10 +8,9 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'w0rp/ale'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
-if exists('g:gonvim_running')
-else
-    Plug 'ctrlpvim/ctrlp.vim'
-endif
+" Project and file management
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tpope/vim-fugitive'
 
 " Color scheme
 Plug 'morhetz/gruvbox'
@@ -25,24 +24,15 @@ Plug 'ElmCast/elm-vim'
 Plug 'othree/yajs.vim'
 
 " Nicer statusline
-if exists('g:gonvim_running')
-else
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'bling/vim-bufferline'
-endif
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'bling/vim-bufferline'
 
 " Tickscript
 Plug 'nathanielc/vim-tickscript'
 
 " Typescript
 Plug 'HerringtonDarkholme/yats.vim'
-
-" Gonvim
-if exists('g:gonvim_running')
-    Plug 'equalsraf/neovim-gui-shim'
-    Plug 'akiyosi/gonvim-fuzzy'
-endif
 
 " Python
 Plug 'tmhedberg/SimpylFold'
@@ -137,53 +127,27 @@ let g:SuperTabCrMapping = 1
 set autochdir
 
 " Vim-airline config
-if exists('g:gonvim_running')
-else
-    let g:airline_left_sep = ''
-    let g:airline_right_sep = ''
-    let g:airline_theme = 'gruvbox'
-    let g:bufferline_fixed_index = 0
-    let g:bufferline_echo = 0
-    let g:airline#extensions#ale#enabled = 1
-    set laststatus=2 " Always show statusline
-    set noshowmode
-endif
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline_theme = 'gruvbox'
+let g:bufferline_fixed_index = 0
+let g:bufferline_echo = 0
+let g:airline#extensions#ale#enabled = 1
+set laststatus=2 " Always show statusline
+set noshowmode
 
 " CtrlP config
-if exists('g:gonvim_running')
-else
-    let g:ctrlp_max_height = 20
-    let g:ctrlp_max_files = 0                                                      
-    let g:ctrlp_clear_cache_on_exit = 0                                            
-    let g:ctrlp_use_caching = 0
-    "let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-endif
+let g:ctrlp_max_height = 20
+let g:ctrlp_max_files = 0                                                      
+let g:ctrlp_clear_cache_on_exit = 0                                            
+let g:ctrlp_use_caching = 0
+"let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
 
-" Gonvim settings
-if exists('g:gonvim_running')
-  " Use Gonvim UI instead of vim native UII
-  set laststatus=0
-  set noshowmode
-  set noruler
-  set noautochdir
+" Use rg!
+set grepprg=rg
 
-  " Mapping for gonvim-fuzzy
-  " nnoremap <Ctrl>n :GonvimWorkspaceNext<CR>
-  " nnoremap <Ctrl>p :GonvimWorkspacePrevious<CR>
-  nnoremap <C-p> :GonvimFuzzyFiles<CR>
-  " nnoremap <Ctrl>fg :GonvimFuzzyAg<CR>
-  nnoremap <C-b> :GonvimFuzzyBuffers<CR>
-  " nnoremap <C-f> :GonvimFuzzyBLines<CR>
-endif
-
-" Use ag!
-set grepprg=ag
-
-if exists('g:gonvim_running')
-else
-    map <C-b> :CtrlPBuffer<CR>
-endif
+map <C-b> :CtrlPBuffer<CR>
 
 " Typescript
 let g:nvim_typescript#type_info_on_hold = 1
