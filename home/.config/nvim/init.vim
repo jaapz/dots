@@ -199,6 +199,8 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
 
+hi default link CocHoverRange     Syntax
+
 function! s:show_documentation()
   call CocAction('doHover')
 endfunction
