@@ -9,8 +9,8 @@ Plug 'w0rp/ale'
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 " Project and file management
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'junegunn/fzf.vim'
 
 " Color scheme
 Plug 'morhetz/gruvbox'
@@ -27,9 +27,6 @@ Plug 'othree/yajs.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
-
-" Tickscript
-Plug 'nathanielc/vim-tickscript'
 
 " Typescript
 Plug 'HerringtonDarkholme/yats.vim'
@@ -64,8 +61,7 @@ set inccommand=split
 set splitbelow
 
 " Fold using syntax files
-" set foldmethod=indent
-set nofoldenable
+set foldmethod=syntax
 
 " Pythonic indents
 set shiftwidth=4
@@ -123,9 +119,6 @@ set termguicolors
 let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabCrMapping = 1
 
-" Automatically change the CWD with the file we are currently editing
-set autochdir
-
 " Vim-airline config
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
@@ -133,16 +126,44 @@ let g:airline_theme = 'gruvbox'
 let g:bufferline_fixed_index = 0
 let g:bufferline_echo = 0
 let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#branch#sha1_len = 6
+let g:airline#extensions#branch#displayed_head_limit = 5
 set laststatus=2 " Always show statusline
 set noshowmode
 
-" CtrlP config
-let g:ctrlp_max_height = 20
-let g:ctrlp_max_files = 0                                                      
-let g:ctrlp_clear_cache_on_exit = 0                                            
-let g:ctrlp_use_caching = 0
-"let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+" Fzf config
+set winblend=10 " See-through popover windows
+
+let $FZF_DEFAULT_COMMAND = "rg --files"
+let $FZF_PREVIEW_COMMAND = "bat --style=snip --theme='Monokai Extended' --color=always {}"
+let $FZF_DEFAULT_OPTS=' --color=dark --layout=reverse --margin=1,2'
+
+" Use nvim floating windows to show fzf results.
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+function! FloatingFZF()
+  let buf = nvim_create_buf(v:false, v:true)
+  call setbufvar(buf, '&signcolumn', 'no')
+
+  let height = float2nr(40)
+  let width = float2nr(90)
+  let horizontal = float2nr((&columns - width) / 2)
+  let vertical = 1
+
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height,
+        \ 'style': 'minimal'
+        \ }
+
+  call nvim_open_win(buf, v:true, opts)
+endfunction
+
+nnoremap <silent> <C-p> :call fzf#vim#files('', fzf#vim#with_preview({'options': '--prompt ""'}, 'right:70%'))<CR>
+nnoremap <silent> <C-o> :Rg<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
 
 " Use rg!
 set grepprg=rg
