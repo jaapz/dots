@@ -61,8 +61,7 @@ set inccommand=split
 set splitbelow
 
 " Fold using syntax files
-" set foldmethod=indent
-set nofoldenable
+set foldmethod=syntax
 
 " Pythonic indents
 set shiftwidth=4
@@ -163,6 +162,7 @@ function! FloatingFZF()
 endfunction
 
 nnoremap <silent> <C-p> :call fzf#vim#files('', fzf#vim#with_preview({'options': '--prompt ""'}, 'right:70%'))<CR>
+nnoremap <silent> <C-o> :Rg<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 
 " Use rg!
