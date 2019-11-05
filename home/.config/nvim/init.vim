@@ -26,7 +26,6 @@ Plug 'othree/yajs.vim'
 " Nicer statusline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'bling/vim-bufferline'
 
 " Typescript
 Plug 'HerringtonDarkholme/yats.vim'
@@ -94,9 +93,6 @@ set wildignore+=*.swp
 set textwidth=79
 set colorcolumn=79,120
 
-" No backups
-set nowritebackup 
-
 " Why is this not default.
 set backspace=indent,eol,start
 
@@ -123,8 +119,6 @@ let g:SuperTabCrMapping = 1
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_theme = 'gruvbox'
-let g:bufferline_fixed_index = 0
-let g:bufferline_echo = 0
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#branch#sha1_len = 6
 let g:airline#extensions#branch#displayed_head_limit = 5
@@ -169,19 +163,6 @@ nnoremap <silent> <leader>b :Buffers<CR>
 set grepprg=rg
 
 map <C-b> :CtrlPBuffer<CR>
-
-" Typescript
-let g:nvim_typescript#type_info_on_hold = 1
-let g:nvim_typescript#default_mappings = 1
-let g:nvim_typescript#tsimport#template = 'import {%s} from ''%s'';'
-
-" Tern for deoplete
-let g:tern#command = ["tern"]
-let g:tern#arguments = ["--persistent"]
-
-" Typescript
-autocmd FileType typescript nmap <buffer> <Leader>t : <C-u>echo tsuquyomi#hint()<CR>
-let g:tsuquyomi_disable_quickfix = 1
 
 " Ale configuration
 let g:ale_linters_explicit = 1
