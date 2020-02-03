@@ -6,6 +6,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Linting & completion
 Plug 'w0rp/ale'
+
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 " Project and file management
@@ -29,9 +30,6 @@ Plug 'vim-airline/vim-airline-themes'
 
 " Typescript
 Plug 'HerringtonDarkholme/yats.vim'
-
-" Python
-Plug 'tmhedberg/SimpylFold'
 
 " Plug cleaunup
 call plug#end()
@@ -59,8 +57,9 @@ set inccommand=split
 " Split the Correct(tm) way.
 set splitbelow
 
-" Fold using syntax files
-set foldmethod=syntax
+" Fold using syntax files, default fold opens.
+set foldmethod=indent
+set nofoldenable
 
 " Pythonic indents
 set shiftwidth=4
@@ -75,7 +74,6 @@ au FileType html.handlebars setlocal indentexpr=
 
 " Correct unicode encoding
 set encoding=utf-8
-set termencoding=utf-8
 set laststatus=2
 set cursorline
 
@@ -110,11 +108,6 @@ colorscheme gruvbox
 set t_Co=256
 set termguicolors
 
-" Let supertab figure out which completion to use based on context, and make
-" the enter key "accept" the completion suggestion.
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabCrMapping = 1
-
 " Vim-airline config
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
@@ -122,6 +115,7 @@ let g:airline_theme = 'gruvbox'
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#branch#sha1_len = 6
 let g:airline#extensions#branch#displayed_head_limit = 5
+let g:airline#extensions#coc#enabled = 1
 set laststatus=2 " Always show statusline
 set noshowmode
 
@@ -168,16 +162,17 @@ map <C-b> :CtrlPBuffer<CR>
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
 \   'javascript': ['eslint'],
-\   'typescript': ['tsserver'],
-\   'go': ['gometalinter', 'golint', 'govet'],
+\   'typescript': ['eslint', 'tsserver'],
+\   'go': ['gopls'],
 \   'python': ['flake8', 'mypy'],
 \}
 
 let g:ale_fix_on_save = 1
 let g:ale_fixers = {
 \   'go': ['goimports'],
-\   'python': ['black'],
+\   'python': ['isort', 'black'],
 \   'javascript': ['prettier'],
+\   'json': ['prettier'],
 \   'typescript': ['prettier'],
 \}
 
@@ -186,6 +181,7 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = '⤫'
 let g:ale_sign_warning = '⚠️'
 let g:ale_open_list = 0
+let g:ale_set_highlights = 0
 
 " CoC config
 set nobackup
