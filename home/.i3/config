@@ -25,6 +25,7 @@ for_window [class="Cb-exit" instance="cb-exit"] floating enable
 
 # Move workspace
 bindsym $mod+m move workspace to output left
+bindsym $mod+n move workspace to output right
 
 # lock screen
 #bindsym $mod+semicolon exec i3lock -c 111111
@@ -197,6 +198,20 @@ client.unfocused    #000000 #000000 #979797
 client.urgent        #E41B17 #C60000 #FFFFFF
 
 for_window [class="Xfce4-notifyd"] floating enable; border none; focus mode_toggle
+
+set $mode_system system [l|s|r|Ctrl+s]
+
+mode "$mode_system" {
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+
+    bindsym --release l exec --no-startup-id slock, mode "default"
+    bindsym --release s exec --no-startup-id slock systemctl suspend, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym Ctrl+s exec --no-startup-id systemctl poweroff -i, mode "default"
+}
+
+bindsym $mod+BackSpace mode "$mode_system"
 
 new_window 1pixel
 
