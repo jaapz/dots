@@ -206,6 +206,8 @@ endfunction
 " Show documentation when the cursor is above something interesting
 autocmd CursorHold * silent call s:show_documentation()
 
+hi default link CocHoverRange     Syntax
+
 " SimpylFold
 let g:SimpylFold_docstring_preview = 1
 let g:SimpylFold_fold_import = 0
