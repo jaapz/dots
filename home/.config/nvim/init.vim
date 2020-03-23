@@ -6,12 +6,12 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Linting & completion
 Plug 'w0rp/ale'
+
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
-if exists('g:gonvim_running')
-else
-    Plug 'ctrlpvim/ctrlp.vim'
-endif
+" Project and file management
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/fzf.vim'
 
 " Color scheme
 Plug 'morhetz/gruvbox'
@@ -25,27 +25,11 @@ Plug 'ElmCast/elm-vim'
 Plug 'othree/yajs.vim'
 
 " Nicer statusline
-if exists('g:gonvim_running')
-else
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'bling/vim-bufferline'
-endif
-
-" Tickscript
-Plug 'nathanielc/vim-tickscript'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " Typescript
 Plug 'HerringtonDarkholme/yats.vim'
-
-" Gonvim
-if exists('g:gonvim_running')
-    Plug 'equalsraf/neovim-gui-shim'
-    Plug 'akiyosi/gonvim-fuzzy'
-endif
-
-" Python
-Plug 'tmhedberg/SimpylFold'
 
 " Plug cleaunup
 call plug#end()
@@ -58,6 +42,7 @@ set number " Always show line numbers
 set nocompatible " No vi compatibility
 set cursorline " Highlight current line
 set so=5
+set nowrap
 
 " When opening a new buffer while the current one has changed and not saved,
 " just 'hide' it and switch to the new buffer, instead of opening the new
@@ -72,8 +57,8 @@ set inccommand=split
 " Split the Correct(tm) way.
 set splitbelow
 
-" Fold using syntax files
-" set foldmethod=indent
+" Fold using syntax files, default fold opens.
+set foldmethod=indent
 set nofoldenable
 
 " Pythonic indents
@@ -89,7 +74,6 @@ au FileType html.handlebars setlocal indentexpr=
 
 " Correct unicode encoding
 set encoding=utf-8
-set termencoding=utf-8
 set laststatus=2
 set cursorline
 
@@ -99,13 +83,13 @@ set wildignore+=*.pyc
 set wildignore+=node_modules
 set wildignore+=*/app/cache/*
 set wildignore+=*/vendor/*
+set wildignore+=*/.git/*
+set wildignore+=*/tmp/*
+set wildignore+=*.swp
 
 " Show max text width
 set textwidth=79
 set colorcolumn=79,120
-
-" No backups
-set nowritebackup 
 
 " Why is this not default.
 set backspace=indent,eol,start
@@ -124,87 +108,72 @@ colorscheme gruvbox
 set t_Co=256
 set termguicolors
 
-" Let supertab figure out which completion to use based on context, and make
-" the enter key "accept" the completion suggestion.
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabCrMapping = 1
-
-" Automatically change the CWD with the file we are currently editing
-set autochdir
-
 " Vim-airline config
-if exists('g:gonvim_running')
-else
-    let g:airline_left_sep = ''
-    let g:airline_right_sep = ''
-    let g:airline_theme = 'gruvbox'
-    let g:bufferline_fixed_index = 0
-    let g:bufferline_echo = 0
-    let g:airline#extensions#ale#enabled = 1
-    set laststatus=2 " Always show statusline
-    set noshowmode
-endif
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline_theme = 'gruvbox'
+let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#branch#sha1_len = 6
+let g:airline#extensions#branch#displayed_head_limit = 5
+let g:airline#extensions#coc#enabled = 1
+set laststatus=2 " Always show statusline
+set noshowmode
 
-" CtrlP config
-if exists('g:gonvim_running')
-else
-    let g:ctrlp_max_height = 20
-    let g:ctrlp_max_files = 0                                                      
-    let g:ctrlp_clear_cache_on_exit = 0                                            
-    let g:ctrlp_use_caching = 0
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-endif
+" Fzf config
+set winblend=10 " See-through popover windows
 
-" Gonvim settings
-if exists('g:gonvim_running')
-  " Use Gonvim UI instead of vim native UII
-  set laststatus=0
-  set noshowmode
-  set noruler
-  set noautochdir
+let $FZF_DEFAULT_COMMAND = "rg --files"
+let $FZF_PREVIEW_COMMAND = "bat --style=snip --theme='Monokai Extended' --color=always {}"
+let $FZF_DEFAULT_OPTS=' --color=dark --layout=reverse --margin=1,2'
 
-  " Mapping for gonvim-fuzzy
-  " nnoremap <Ctrl>n :GonvimWorkspaceNext<CR>
-  " nnoremap <Ctrl>p :GonvimWorkspacePrevious<CR>
-  nnoremap <C-p> :GonvimFuzzyFiles<CR>
-  " nnoremap <Ctrl>fg :GonvimFuzzyAg<CR>
-  nnoremap <C-b> :GonvimFuzzyBuffers<CR>
-  " nnoremap <C-f> :GonvimFuzzyBLines<CR>
-endif
+" Use nvim floating windows to show fzf results.
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+function! FloatingFZF()
+  let buf = nvim_create_buf(v:false, v:true)
+  call setbufvar(buf, '&signcolumn', 'no')
 
-" Use ag!
-set grepprg=ag
+  let height = float2nr(40)
+  let width = float2nr(90)
+  let horizontal = float2nr((&columns - width) / 2)
+  let vertical = 1
 
-if exists('g:gonvim_running')
-else
-    map <C-b> :CtrlPBuffer<CR>
-endif
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height,
+        \ 'style': 'minimal'
+        \ }
 
-" Typescript
-let g:nvim_typescript#type_info_on_hold = 1
-let g:nvim_typescript#default_mappings = 1
-let g:nvim_typescript#tsimport#template = 'import {%s} from ''%s'';'
+  call nvim_open_win(buf, v:true, opts)
+endfunction
 
-" Tern for deoplete
-let g:tern#command = ["tern"]
-let g:tern#arguments = ["--persistent"]
+nnoremap <silent> <C-p> :call fzf#vim#files('', fzf#vim#with_preview({'options': '--prompt ""'}, 'right:70%'))<CR>
+nnoremap <silent> <C-o> :Rg<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
 
-" Typescript
-autocmd FileType typescript nmap <buffer> <Leader>t : <C-u>echo tsuquyomi#hint()<CR>
-let g:tsuquyomi_disable_quickfix = 1
+" Use rg!
+set grepprg=rg
+
+map <C-b> :CtrlPBuffer<CR>
 
 " Ale configuration
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
 \   'javascript': ['eslint'],
-\   'python': ['flake8'],
-\   'typescript': ['tsserver'],
-\   'go': ['gometalinter', 'golint', 'govet'],
+\   'typescript': ['eslint', 'tsserver'],
+\   'go': ['gopls'],
+\   'python': ['flake8', 'mypy'],
 \}
 
 let g:ale_fix_on_save = 1
 let g:ale_fixers = {
-\   'go': ['goimports']
+\   'go': ['goimports'],
+\   'python': ['isort', 'black'],
+\   'javascript': ['prettier'],
+\   'json': ['prettier'],
+\   'typescript': ['prettier'],
 \}
 
 let g:ale_go_gometalinter_options = '--disable-all --enable=errcheck --enable=megacheck --vendor'
@@ -212,6 +181,7 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = '⤫'
 let g:ale_sign_warning = '⚠️'
 let g:ale_open_list = 0
+let g:ale_set_highlights = 0
 
 " CoC config
 set nobackup
@@ -227,10 +197,13 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
 
+hi default link CocHoverRange     Syntax
+
 function! s:show_documentation()
   call CocAction('doHover')
 endfunction
 
+" Show documentation when the cursor is above something interesting
 autocmd CursorHold * silent call s:show_documentation()
 
 hi default link CocHoverRange     Syntax
