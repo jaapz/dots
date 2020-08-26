@@ -6,6 +6,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Linting & completion
 Plug 'w0rp/ale'
+Plug 'psf/black', { 'branch': 'stable' }
 
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
