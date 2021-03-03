@@ -5,31 +5,32 @@ filetype off
 call plug#begin('~/.config/nvim/plugged')
 
 " Linting & completion
-Plug 'w0rp/ale'
-
+Plug 'psf/black', { 'branch': '20.8b1' }
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+
+" Highlighting & syntax
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " highlighting
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'embark-theme/vim', {'as': 'embark'}
 
 " Project and file management
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf.vim'
-
-" Color scheme
-Plug 'morhetz/gruvbox'
 
 " Easier commenting
 Plug 'tpope/vim-commentary'
 
-" Javascript tools
-Plug 'mustache/vim-mustache-handlebars'
-Plug 'ElmCast/elm-vim'
-Plug 'othree/yajs.vim'
+" Keep cursor state across nvim edit sessions
+Plug 'zhimsel/vim-stay'
 
 " Nicer statusline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-" Typescript
-Plug 'HerringtonDarkholme/yats.vim'
+" Telescope (better Ctrl-P)
+Plug 'nvim-lua/popup.nvim'          " popup impl for telescope
+Plug 'nvim-lua/plenary.nvim'        " helper functions for telescope
+Plug 'kyazdani42/nvim-web-devicons' " nice icons in telescope
+Plug 'nvim-telescope/telescope.nvim'
 
 " Plug cleaunup
 call plug#end()
@@ -43,6 +44,7 @@ set nocompatible " No vi compatibility
 set cursorline " Highlight current line
 set so=5
 set nowrap
+set formatoptions-=t
 
 " When opening a new buffer while the current one has changed and not saved,
 " just 'hide' it and switch to the new buffer, instead of opening the new
@@ -57,8 +59,10 @@ set inccommand=split
 " Split the Correct(tm) way.
 set splitbelow
 
-" Fold using syntax files, default fold opens.
+" Fold using indent, default fold opens.
 set foldmethod=indent
+"set foldmethod=expr
+"set foldexpr=nvim_treesitter#foldexpr()
 set nofoldenable
 
 " Pythonic indents
@@ -100,88 +104,77 @@ set listchars=tab:>-
 
 " Enable colorscheme and 256 colors
 set background=dark
-let g:gruvbox_contrast_dark = "medium"
-let g:gruvbox_improved_string = 1
-let g:gruvbox_improved_warnings = 1
-
-colorscheme gruvbox
+colorscheme embark
 set t_Co=256
 set termguicolors
+
+" Treesitter config
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained",
+  highlight = {
+    enable = true,
+  },
+  indent = {
+    enable = false,
+  }
+}
+EOF
 
 " Vim-airline config
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
-let g:airline_theme = 'gruvbox'
-let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#branch#sha1_len = 6
 let g:airline#extensions#branch#displayed_head_limit = 5
-let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#coc#enabled = 0
 set laststatus=2 " Always show statusline
 set noshowmode
 
-" Fzf config
-set winblend=10 " See-through popover windows
+" Telescope
+nnoremap <silent> <C-p> <cmd>Telescope find_files<CR>
+nnoremap <silent> <C-o> <cmd>Telescope live_grep<CR>
+nnoremap <silent> <C-s> <cmd>Telescope current_buffer_fuzzy_find<CR>
+nnoremap <silent> <C-b> <cmd>Telescope buffer<CR>
+nnoremap <silent> <leader>b <cmd>Telescope buffers<CR>
 
-let $FZF_DEFAULT_COMMAND = "rg --files"
-let $FZF_PREVIEW_COMMAND = "bat --style=snip --theme='Monokai Extended' --color=always {}"
-let $FZF_DEFAULT_OPTS=' --color=dark --layout=reverse --margin=1,2'
+lua <<EOF
+require('telescope').setup{
+  defaults = {
+    prompt_prefix = "> ",
+    selection_strategy = "reset",
+    sorting_strategy = "ascending",
+    layout_strategy = "vertical",
+    layout_defaults = {
+      vertical = {
+        mirror = true,
+      },
+    },
+    winblend = 10,
+    use_less = false,
+    set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
 
-" Use nvim floating windows to show fzf results.
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-function! FloatingFZF()
-  let buf = nvim_create_buf(v:false, v:true)
-  call setbufvar(buf, '&signcolumn', 'no')
+    -- vim_buffer_cat is still buffy with python, so for now we use old cat
+    file_previewer = require'telescope.previewers'.cat.new,
+  }
+}
+EOF
 
-  let height = float2nr(40)
-  let width = float2nr(90)
-  let horizontal = float2nr((&columns - width) / 2)
-  let vertical = 1
+" Remove 'set hidden'
+set nohidden
 
-  let opts = {
-        \ 'relative': 'editor',
-        \ 'row': vertical,
-        \ 'col': horizontal,
-        \ 'width': width,
-        \ 'height': height,
-        \ 'style': 'minimal'
-        \ }
+augroup netrw_buf_hidden_fix
+    autocmd!
 
-  call nvim_open_win(buf, v:true, opts)
-endfunction
+    " Set all non-netrw buffers to bufhidden=hide
+    autocmd BufWinEnter *
+                \  if &ft != 'netrw'
+                \|     set bufhidden=hide
+                \| endif
 
-nnoremap <silent> <C-p> :call fzf#vim#files('', fzf#vim#with_preview({'options': '--prompt ""'}, 'right:70%'))<CR>
-nnoremap <silent> <C-o> :Rg<CR>
-nnoremap <silent> <leader>b :Buffers<CR>
+augroup end
 
 " Use rg!
 set grepprg=rg
-
-map <C-b> :CtrlPBuffer<CR>
-
-" Ale configuration
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-\   'javascript': ['eslint'],
-\   'typescript': ['eslint', 'tsserver'],
-\   'go': ['gopls'],
-\   'python': ['flake8', 'mypy'],
-\}
-
-let g:ale_fix_on_save = 1
-let g:ale_fixers = {
-\   'go': ['goimports'],
-\   'python': ['isort', 'black'],
-\   'javascript': ['prettier'],
-\   'json': ['prettier'],
-\   'typescript': ['prettier'],
-\}
-
-let g:ale_go_gometalinter_options = '--disable-all --enable=errcheck --enable=megacheck --vendor'
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = '⤫'
-let g:ale_sign_warning = '⚠️'
-let g:ale_open_list = 0
-let g:ale_set_highlights = 0
 
 " CoC config
 set nobackup
@@ -196,6 +189,7 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>a <Plug>(coc-codeaction)
 
 hi default link CocHoverRange     Syntax
 
@@ -207,10 +201,7 @@ endfunction
 autocmd CursorHold * silent call s:show_documentation()
 
 hi default link CocHoverRange     Syntax
-
-" SimpylFold
-let g:SimpylFold_docstring_preview = 1
-let g:SimpylFold_fold_import = 0
+autocmd BufWritePre *.py execute ':Black'
 
 " Buffers
 noremap <leader>/ <Esc>:bn<CR>
