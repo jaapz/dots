@@ -6,7 +6,13 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Linting & completion
 Plug 'psf/black', { 'branch': '20.8b1' }
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'fatih/vim-go'
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'branch': 'release/0.x'
+  \ }
 
 " Highlighting & syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " highlighting
@@ -14,17 +20,13 @@ Plug 'mustache/vim-mustache-handlebars'
 Plug 'embark-theme/vim', {'as': 'embark'}
 
 " Project and file management
-Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 " Easier commenting
 Plug 'tpope/vim-commentary'
 
-" Keep cursor state across nvim edit sessions
-Plug 'zhimsel/vim-stay'
-
 " Nicer statusline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
 
 " Telescope (better Ctrl-P)
 Plug 'nvim-lua/popup.nvim'          " popup impl for telescope
@@ -37,6 +39,14 @@ call plug#end()
 syntax on
 filetype plugin indent on
 
+" Lua plugin configs
+lua <<EOF
+require 'plugins.treesitter'
+require 'plugins.telescope'
+require 'plugins.lspconfig'
+require 'plugins.statusline'
+EOF
+
 " Random basic settings
 let mapleader = ","
 set number " Always show line numbers
@@ -45,6 +55,8 @@ set cursorline " Highlight current line
 set so=5
 set nowrap
 set formatoptions-=t
+set splitbelow
+set cursorline
 
 " When opening a new buffer while the current one has changed and not saved,
 " just 'hide' it and switch to the new buffer, instead of opening the new
@@ -56,13 +68,8 @@ set hlsearch
 set incsearch
 set inccommand=split
 
-" Split the Correct(tm) way.
-set splitbelow
-
 " Fold using indent, default fold opens.
 set foldmethod=indent
-"set foldmethod=expr
-"set foldexpr=nvim_treesitter#foldexpr()
 set nofoldenable
 
 " Pythonic indents
@@ -73,13 +80,8 @@ set expandtab
 set tabstop=4
 set softtabstop=4
 
-" Disable auto indent for html files
-au FileType html.handlebars setlocal indentexpr=
-
 " Correct unicode encoding
 set encoding=utf-8
-set laststatus=2
-set cursorline
 
 " Ignore uneccessary files
 set wildignore+=__pycache__
@@ -95,12 +97,8 @@ set wildignore+=*.swp
 set textwidth=79
 set colorcolumn=79,120
 
-" Why is this not default.
+" Allow more sane backspace behaviour
 set backspace=indent,eol,start
-
-" Show tabs/spaces
-set list
-set listchars=tab:>-
 
 " Enable colorscheme and 256 colors
 set background=dark
@@ -108,27 +106,11 @@ colorscheme embark
 set t_Co=256
 set termguicolors
 
-" Treesitter config
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained",
-  highlight = {
-    enable = true,
-  },
-  indent = {
-    enable = false,
-  }
-}
-EOF
-
-" Vim-airline config
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline#extensions#branch#sha1_len = 6
-let g:airline#extensions#branch#displayed_head_limit = 5
-let g:airline#extensions#coc#enabled = 0
-set laststatus=2 " Always show statusline
+" Statusline config
 set noshowmode
+
+" Use rg!
+set grepprg=rg
 
 " Telescope
 nnoremap <silent> <C-p> <cmd>Telescope find_files<CR>
@@ -137,73 +119,30 @@ nnoremap <silent> <C-s> <cmd>Telescope current_buffer_fuzzy_find<CR>
 nnoremap <silent> <C-b> <cmd>Telescope buffer<CR>
 nnoremap <silent> <leader>b <cmd>Telescope buffers<CR>
 
-lua <<EOF
-require('telescope').setup{
-  defaults = {
-    prompt_prefix = "> ",
-    selection_strategy = "reset",
-    sorting_strategy = "ascending",
-    layout_strategy = "vertical",
-    layout_defaults = {
-      vertical = {
-        mirror = true,
-      },
-    },
-    winblend = 10,
-    use_less = false,
-    set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-
-    -- vim_buffer_cat is still buffy with python, so for now we use old cat
-    file_previewer = require'telescope.previewers'.cat.new,
-  }
-}
-EOF
-
-" Remove 'set hidden'
-set nohidden
-
-augroup netrw_buf_hidden_fix
-    autocmd!
-
-    " Set all non-netrw buffers to bufhidden=hide
-    autocmd BufWinEnter *
-                \  if &ft != 'netrw'
-                \|     set bufhidden=hide
-                \| endif
-
-augroup end
-
-" Use rg!
-set grepprg=rg
-
-" CoC config
-set nobackup
-set nowritebackup
-set updatetime=300
+" nvim-lsp & completion-nvim
+set signcolumn=no
+set completeopt=menuone,noinsert,noselect
 set shortmess+=c
-set signcolumn=yes
-set cmdheight=2
+set updatetime=300
 
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <leader>rn <Plug>(coc-rename)
-nmap <leader>a <Plug>(coc-codeaction)
+autocmd BufEnter * lua require'completion'.on_attach()
+autocmd CursorHold * silent lua vim.lsp.buf.hover()
 
-hi default link CocHoverRange     Syntax
+nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.hover()<CR>
 
-function! s:show_documentation()
-  call CocAction('doHover')
-endfunction
-
-" Show documentation when the cursor is above something interesting
-autocmd CursorHold * silent call s:show_documentation()
-
-hi default link CocHoverRange     Syntax
+" Fixers (black, prettier, goimports)
 autocmd BufWritePre *.py execute ':Black'
+autocmd BufWritePre *.ts execute ':PrettierAsync'
+autocmd BufWritePre *.js execute ':PrettierAsync'
+autocmd BufWritePre *.scss execute ':PrettierAsync'
+autocmd BufWritePre *.css execute ':PrettierAsync'
+let g:prettier#quickfix_enabled = 0
+let g:go_fmt_command = "goimports"
 
-" Buffers
+" Buffer navigation
 noremap <leader>/ <Esc>:bn<CR>
 noremap <leader>. <Esc>:bp<CR>
 noremap <leader>o <Esc>:bd<CR>
