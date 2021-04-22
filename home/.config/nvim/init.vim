@@ -5,37 +5,47 @@ filetype off
 call plug#begin('~/.config/nvim/plugged')
 
 " Linting & completion
-Plug 'w0rp/ale'
-Plug 'psf/black', { 'branch': 'stable' }
+Plug 'psf/black', { 'branch': '20.8b1' }
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'fatih/vim-go'
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'branch': 'release/0.x'
+  \ }
 
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+" Highlighting & syntax
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " highlighting
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'embark-theme/vim', {'as': 'embark'}
 
 " Project and file management
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf.vim'
-
-" Color scheme
-Plug 'morhetz/gruvbox'
+Plug 'airblade/vim-gitgutter'
 
 " Easier commenting
 Plug 'tpope/vim-commentary'
 
-" Javascript tools
-Plug 'mustache/vim-mustache-handlebars'
-Plug 'ElmCast/elm-vim'
-Plug 'othree/yajs.vim'
-
 " Nicer statusline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
 
-" Typescript
-Plug 'HerringtonDarkholme/yats.vim'
+" Telescope (better Ctrl-P)
+Plug 'nvim-lua/popup.nvim'          " popup impl for telescope
+Plug 'nvim-lua/plenary.nvim'        " helper functions for telescope
+Plug 'kyazdani42/nvim-web-devicons' " nice icons in telescope
+Plug 'nvim-telescope/telescope.nvim'
 
 " Plug cleaunup
 call plug#end()
 syntax on
 filetype plugin indent on
+
+" Lua plugin configs
+lua <<EOF
+require 'plugins.treesitter'
+require 'plugins.telescope'
+require 'plugins.lspconfig'
+require 'plugins.statusline'
+EOF
 
 " Random basic settings
 let mapleader = ","
@@ -44,6 +54,9 @@ set nocompatible " No vi compatibility
 set cursorline " Highlight current line
 set so=5
 set nowrap
+set formatoptions-=t
+set splitbelow
+set cursorline
 
 " When opening a new buffer while the current one has changed and not saved,
 " just 'hide' it and switch to the new buffer, instead of opening the new
@@ -55,10 +68,7 @@ set hlsearch
 set incsearch
 set inccommand=split
 
-" Split the Correct(tm) way.
-set splitbelow
-
-" Fold using syntax files, default fold opens.
+" Fold using indent, default fold opens.
 set foldmethod=indent
 set nofoldenable
 
@@ -70,13 +80,8 @@ set expandtab
 set tabstop=4
 set softtabstop=4
 
-" Disable auto indent for html files
-au FileType html.handlebars setlocal indentexpr=
-
 " Correct unicode encoding
 set encoding=utf-8
-set laststatus=2
-set cursorline
 
 " Ignore uneccessary files
 set wildignore+=__pycache__
@@ -92,128 +97,52 @@ set wildignore+=*.swp
 set textwidth=79
 set colorcolumn=79,120
 
-" Why is this not default.
+" Allow more sane backspace behaviour
 set backspace=indent,eol,start
-
-" Show tabs/spaces
-set list
-set listchars=tab:>-
 
 " Enable colorscheme and 256 colors
 set background=dark
-let g:gruvbox_contrast_dark = "medium"
-let g:gruvbox_improved_string = 1
-let g:gruvbox_improved_warnings = 1
-
-colorscheme gruvbox
+colorscheme embark
 set t_Co=256
 set termguicolors
 
-" Vim-airline config
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline_theme = 'gruvbox'
-let g:airline#extensions#ale#enabled = 1
-let g:airline#extensions#branch#sha1_len = 6
-let g:airline#extensions#branch#displayed_head_limit = 5
-let g:airline#extensions#coc#enabled = 1
-set laststatus=2 " Always show statusline
+" Statusline config
 set noshowmode
-
-" Fzf config
-set winblend=10 " See-through popover windows
-
-let $FZF_DEFAULT_COMMAND = "rg --files"
-let $FZF_PREVIEW_COMMAND = "bat --style=snip --theme='Monokai Extended' --color=always {}"
-let $FZF_DEFAULT_OPTS=' --color=dark --layout=reverse --margin=1,2'
-
-" Use nvim floating windows to show fzf results.
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-function! FloatingFZF()
-  let buf = nvim_create_buf(v:false, v:true)
-  call setbufvar(buf, '&signcolumn', 'no')
-
-  let height = float2nr(40)
-  let width = float2nr(90)
-  let horizontal = float2nr((&columns - width) / 2)
-  let vertical = 1
-
-  let opts = {
-        \ 'relative': 'editor',
-        \ 'row': vertical,
-        \ 'col': horizontal,
-        \ 'width': width,
-        \ 'height': height,
-        \ 'style': 'minimal'
-        \ }
-
-  call nvim_open_win(buf, v:true, opts)
-endfunction
-
-nnoremap <silent> <C-p> :call fzf#vim#files('', fzf#vim#with_preview({'options': '--prompt ""'}, 'right:70%'))<CR>
-nnoremap <silent> <C-o> :Rg<CR>
-nnoremap <silent> <leader>b :Buffers<CR>
 
 " Use rg!
 set grepprg=rg
 
-map <C-b> :CtrlPBuffer<CR>
+" Telescope
+nnoremap <silent> <C-p> <cmd>Telescope find_files<CR>
+nnoremap <silent> <C-o> <cmd>Telescope live_grep<CR>
+nnoremap <silent> <C-s> <cmd>Telescope current_buffer_fuzzy_find<CR>
+nnoremap <silent> <C-b> <cmd>Telescope buffer<CR>
+nnoremap <silent> <leader>b <cmd>Telescope buffers<CR>
 
-" Ale configuration
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-\   'javascript': ['eslint'],
-\   'typescript': ['eslint', 'tsserver'],
-\   'go': ['gopls'],
-\   'python': ['flake8', 'mypy'],
-\}
-
-let g:ale_fix_on_save = 1
-let g:ale_fixers = {
-\   'go': ['goimports'],
-\   'python': ['isort', 'black'],
-\   'javascript': ['prettier'],
-\   'json': ['prettier'],
-\   'typescript': ['prettier'],
-\}
-
-let g:ale_go_gometalinter_options = '--disable-all --enable=errcheck --enable=megacheck --vendor'
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = '⤫'
-let g:ale_sign_warning = '⚠️'
-let g:ale_open_list = 0
-let g:ale_set_highlights = 0
-
-" CoC config
-set nobackup
-set nowritebackup
-set updatetime=300
+" nvim-lsp & completion-nvim
+set signcolumn=no
+set completeopt=menuone,noinsert,noselect
 set shortmess+=c
-set signcolumn=yes
-set cmdheight=2
+set updatetime=300
 
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <leader>rn <Plug>(coc-rename)
+autocmd BufEnter * lua require'completion'.on_attach()
+autocmd CursorHold * silent lua vim.lsp.buf.hover()
 
-hi default link CocHoverRange     Syntax
+nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.hover()<CR>
 
-function! s:show_documentation()
-  call CocAction('doHover')
-endfunction
+" Fixers (black, prettier, goimports)
+autocmd BufWritePre *.py execute ':Black'
+autocmd BufWritePre *.ts execute ':PrettierAsync'
+autocmd BufWritePre *.js execute ':PrettierAsync'
+autocmd BufWritePre *.scss execute ':PrettierAsync'
+autocmd BufWritePre *.css execute ':PrettierAsync'
+let g:prettier#quickfix_enabled = 0
+let g:go_fmt_command = "goimports"
 
-" Show documentation when the cursor is above something interesting
-autocmd CursorHold * silent call s:show_documentation()
-
-hi default link CocHoverRange     Syntax
-
-" SimpylFold
-let g:SimpylFold_docstring_preview = 1
-let g:SimpylFold_fold_import = 0
-
-" Buffers
+" Buffer navigation
 noremap <leader>/ <Esc>:bn<CR>
 noremap <leader>. <Esc>:bp<CR>
 noremap <leader>o <Esc>:bd<CR>
