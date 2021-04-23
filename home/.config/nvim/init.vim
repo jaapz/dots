@@ -7,12 +7,13 @@ call plug#begin('~/.config/nvim/plugged')
 " Linting & completion
 Plug 'psf/black', { 'branch': '20.8b1' }
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/nvim-compe'
 Plug 'fatih/vim-go'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'branch': 'release/0.x'
   \ }
+Plug 'mattn/emmet-vim'
 
 " Highlighting & syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " highlighting
@@ -45,6 +46,7 @@ require 'plugins.treesitter'
 require 'plugins.telescope'
 require 'plugins.lspconfig'
 require 'plugins.statusline'
+require 'plugins.compe'
 EOF
 
 " Random basic settings
@@ -119,26 +121,39 @@ nnoremap <silent> <C-s> <cmd>Telescope current_buffer_fuzzy_find<CR>
 nnoremap <silent> <C-b> <cmd>Telescope buffer<CR>
 nnoremap <silent> <leader>b <cmd>Telescope buffers<CR>
 
-" nvim-lsp & completion-nvim
+" nvim-lsp & nvim-compe
 set signcolumn=no
-set completeopt=menuone,noinsert,noselect
+set completeopt=menuone,noselect
 set shortmess+=c
 set updatetime=300
 
-autocmd BufEnter * lua require'completion'.on_attach()
-autocmd CursorHold * silent lua vim.lsp.buf.hover()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+
+lua <<EOF
+vim.lsp.util.apply_text_document_edit = function(text_document_edit, index)
+  local text_document = text_document_edit.textDocument
+  local bufnr = vim.uri_to_bufnr(text_document.uri)
+
+  vim.lsp.util.apply_text_edits(text_document_edit.edits, bufnr)
+end
+EOF
 
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <c-d> <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+nnoremap <silent> <leader>a <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <silent> <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
 
 " Fixers (black, prettier, goimports)
-autocmd BufWritePre *.py execute ':Black'
-autocmd BufWritePre *.ts execute ':PrettierAsync'
-autocmd BufWritePre *.js execute ':PrettierAsync'
-autocmd BufWritePre *.scss execute ':PrettierAsync'
-autocmd BufWritePre *.css execute ':PrettierAsync'
+augroup FormatAutogroup
+    autocmd!
+    autocmd BufWritePre *.py execute ':Black'
+    autocmd BufWritePre *.ts,*.js,*.scss,*.css execute ':Prettier'
+augroup END
+
 let g:prettier#quickfix_enabled = 0
 let g:go_fmt_command = "goimports"
 

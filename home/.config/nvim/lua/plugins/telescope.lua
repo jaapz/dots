@@ -4,16 +4,14 @@ require('telescope').setup{
     selection_strategy = "reset",
     sorting_strategy = "ascending",
     layout_strategy = "vertical",
+    results_height = 10,
     layout_defaults = {
       vertical = {
+        preview_height = 0.5,
         mirror = true,
       },
     },
-    winblend = 10,
     use_less = false,
     set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-
-    -- vim_buffer_cat is still buffy with python, so for now we use old cat
-    file_previewer = require'telescope.previewers'.cat.new,
   }
 }
