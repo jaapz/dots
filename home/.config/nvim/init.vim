@@ -8,6 +8,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'psf/black', { 'branch': '20.8b1' }
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
+Plug 'folke/lsp-trouble.nvim'
 Plug 'fatih/vim-go'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
@@ -47,6 +48,11 @@ require 'plugins.telescope'
 require 'plugins.lspconfig'
 require 'plugins.statusline'
 require 'plugins.compe'
+require("trouble").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+}
 EOF
 
 " Random basic settings
@@ -143,7 +149,8 @@ nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> <c-d> <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+"nnoremap <silent> <c-d> <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+nnoremap <silent> <c-d> <cmd>LspTroubleToggle<CR>
 nnoremap <silent> <leader>a <cmd>lua vim.lsp.buf.code_action()<CR>
 nnoremap <silent> <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
 
