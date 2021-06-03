@@ -9,6 +9,7 @@ Plug 'psf/black', { 'branch': '20.8b1' }
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'folke/lsp-trouble.nvim'
+Plug 'ray-x/lsp_signature.nvim'
 Plug 'fatih/vim-go'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
