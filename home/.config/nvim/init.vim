@@ -136,9 +136,6 @@ set completeopt=menu,menuone,noselect
 set shortmess+=c
 set updatetime=300
 
-" inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-
 lua <<EOF
 vim.lsp.util.apply_text_document_edit = function(text_document_edit, index)
   local text_document = text_document_edit.textDocument
