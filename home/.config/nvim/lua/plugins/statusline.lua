@@ -80,7 +80,7 @@ gls.left[3] ={
   FileIcon = {
     provider = 'FileIcon',
     condition = buffer_not_empty,
-    highlight = { require('galaxyline.provider_fileinfo').get_file_icon_color, colors.section_bg },
+    highlight = { require('galaxyline.providers.fileinfo').get_file_icon_color, colors.section_bg },
   },
 }
 gls.left[4] = {
@@ -110,7 +110,7 @@ gls.left[7] = {
   DiffAdd = {
     provider = 'DiffAdd',
     condition = checkwidth,
-    icon = ' ',
+    icon = '   ',
     highlight = { colors.green, colors.bg },
   }
 }
@@ -118,7 +118,7 @@ gls.left[8] = {
   DiffModified = {
     provider = 'DiffModified',
     condition = checkwidth,
-    icon = ' ',
+    icon = '  ',
     highlight = { colors.orange, colors.bg },
   }
 }
@@ -126,7 +126,7 @@ gls.left[9] = {
   DiffRemove = {
     provider = 'DiffRemove',
     condition = checkwidth,
-    icon = ' ',
+    icon = '  ',
     highlight = { colors.red,colors.bg },
   }
 }

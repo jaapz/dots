@@ -4,10 +4,9 @@ require('telescope').setup{
     selection_strategy = "reset",
     sorting_strategy = "ascending",
     layout_strategy = "vertical",
-    results_height = 10,
-    layout_defaults = {
+    layout_config = {
       vertical = {
-        preview_height = 0.5,
+        --preview_height = 30,
         mirror = true,
       },
     },

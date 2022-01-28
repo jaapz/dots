@@ -4,18 +4,19 @@ filetype off
 " Plug setup
 call plug#begin('~/.config/nvim/plugged')
 
-" Linting & completion
-Plug 'psf/black', { 'branch': '20.8b1' }
+" LSP (+ linting)
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-compe'
-Plug 'folke/lsp-trouble.nvim'
-Plug 'ray-x/lsp_signature.nvim'
-Plug 'fatih/vim-go'
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'branch': 'release/0.x'
-  \ }
-Plug 'mattn/emmet-vim'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
+
+" Completion
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 
 " Highlighting & syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " highlighting
@@ -23,13 +24,16 @@ Plug 'mustache/vim-mustache-handlebars'
 Plug 'embark-theme/vim', {'as': 'embark'}
 
 " Project and file management
-Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
 
 " Easier commenting
 Plug 'tpope/vim-commentary'
 
 " Nicer statusline
-Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
+Plug 'NTBBloodbath/galaxyline.nvim'
+
+" EasyMotion, but better?
+Plug 'phaazon/hop.nvim'
 
 " Telescope (better Ctrl-P)
 Plug 'nvim-lua/popup.nvim'          " popup impl for telescope
@@ -48,12 +52,9 @@ require 'plugins.treesitter'
 require 'plugins.telescope'
 require 'plugins.lspconfig'
 require 'plugins.statusline'
-require 'plugins.compe'
-require("trouble").setup {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-}
+require 'plugins.gitsigns'
+require 'plugins.hop'
+require 'plugins.cmp'
 EOF
 
 " Random basic settings
@@ -122,20 +123,21 @@ set noshowmode
 set grepprg=rg
 
 " Telescope
-nnoremap <silent> <C-p> <cmd>Telescope find_files<CR>
-nnoremap <silent> <C-o> <cmd>Telescope live_grep<CR>
-nnoremap <silent> <C-s> <cmd>Telescope current_buffer_fuzzy_find<CR>
-nnoremap <silent> <C-b> <cmd>Telescope buffer<CR>
-nnoremap <silent> <leader>b <cmd>Telescope buffers<CR>
+nnoremap <silent> <C-p> <cmd>Telescope find_files theme=ivy<CR>
+nnoremap <silent> <C-o> <cmd>Telescope live_grep theme=ivy<CR>
+nnoremap <silent> <C-s> <cmd>Telescope current_buffer_fuzzy_find theme=ivy<CR>
+nnoremap <silent> <C-b> <cmd>Telescope buffer theme=ivy<CR>
+nnoremap <silent> <C-f> <cmd>Telescope treesitter theme=ivy<CR>
+nnoremap <silent> <leader>b <cmd>Telescope buffers theme=ivy<CR>
 
-" nvim-lsp & nvim-compe
+" nvim-lsp & nvim-cmp
 set signcolumn=no
-set completeopt=menuone,noselect
+set completeopt=menu,menuone,noselect
 set shortmess+=c
 set updatetime=300
 
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 
 lua <<EOF
 vim.lsp.util.apply_text_document_edit = function(text_document_edit, index)
@@ -150,20 +152,18 @@ nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.hover()<CR>
-"nnoremap <silent> <c-d> <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-nnoremap <silent> <c-d> <cmd>LspTroubleToggle<CR>
+nnoremap <silent> <c-d> <cmd>lua vim.diagnostic.open_float()<CR>
 nnoremap <silent> <leader>a <cmd>lua vim.lsp.buf.code_action()<CR>
 nnoremap <silent> <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
 
 " Fixers (black, prettier, goimports)
 augroup FormatAutogroup
     autocmd!
-    autocmd BufWritePre *.py execute ':Black'
-    autocmd BufWritePre *.ts,*.js,*.scss,*.css execute ':Prettier'
+    autocmd BufWritePre * execute ':lua vim.lsp.buf.formatting_sync()'
 augroup END
 
-let g:prettier#quickfix_enabled = 0
-let g:go_fmt_command = "goimports"
+" Hop.nvim
+nnoremap <silent> <c-l> <cmd>HopLineStart<CR>
 
 " Buffer navigation
 noremap <leader>/ <Esc>:bn<CR>

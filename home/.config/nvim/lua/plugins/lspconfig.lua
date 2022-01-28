@@ -1,34 +1,59 @@
-local cfg =  {
-  bind = true, -- This is mandatory, otherwise border config won't get registered.
-               -- If you want to hook lspsaga or other signature handler, pls set to false
-  doc_lines = 0, -- will show two lines of comment/doc(if there are more than two lines in doc, will be truncated);
-                 -- set to 0 if you DO NOT want any API comments be shown
-                 -- This setting only take effect in insert mode, it does not affect signature help in normal
-                 -- mode
-
-  floating_window = true, -- show hint in a floating window, set to false for virtual text only mode
-  hint_enable = false, -- virtual hint enable
-  hint_prefix = "",  -- Panda for parameter
-  hint_scheme = "String",
-  handler_opts = {
-    border = "none"   -- double, single, shadow, none
-  },
-}
-
-local lsp_signature = require('lsp_signature')
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 require'lspconfig'.pyright.setup{
-    on_attach = function(client, bufnr)
-        lsp_signature.on_attach(cfg)
-    end,
+    capabilities = capabilities,
 }
 require'lspconfig'.tsserver.setup{
+    capabilities = capabilities,
     on_attach = function(client, bufnr)
-        lsp_signature.on_attach(cfg)
+        client.resolved_capabilities.document_formatting = false
+        client.resolved_capabilities.document_range_formatting = false
     end,
 }
 require'lspconfig'.gopls.setup{
+    capabilities = capabilities,
     on_attach = function(client, bufnr)
-        lsp_signature.on_attach(cfg)
+        client.resolved_capabilities.document_formatting = false
+        client.resolved_capabilities.document_range_formatting = false
     end,
 }
+
+vim.diagnostic.config({
+    virtual_text = false,
+    signs = false,
+    float = { border = "single" },
+})
+
+require("lsp_lines").register_lsp_virtual_lines()
+
+require("null-ls").setup({
+    sources = {
+        require("null-ls").builtins.formatting.black,
+        require("null-ls").builtins.formatting.isort,
+        require("null-ls").builtins.formatting.stylelint,
+        require("null-ls").builtins.formatting.prettier.with({
+            disabled_filetypes = { "html.handlebars", },
+        }),
+        require("null-ls").builtins.formatting.goimports,
+        require("null-ls").builtins.diagnostics.eslint,
+        require("null-ls").builtins.diagnostics.stylelint,
+        require("null-ls").builtins.diagnostics.flake8,
+        require("null-ls").builtins.diagnostics.golangci_lint.with({
+            args = {
+                "run",
+                "--disable-all",
+                "--enable=misspell",
+                "--enable=godox",
+                "--enable=revive",
+                "--enable=govet",
+                "--exclude-use-default=false",
+                "--fix=false",
+                "--fast",
+                "--out-format=json",
+                "$DIRNAME",
+                "--path-prefix",
+                "$ROOT",
+            },
+        }),
+    },
+})
