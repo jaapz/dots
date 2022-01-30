@@ -21,7 +21,7 @@ Plug 'hrsh7th/vim-vsnip'
 " Highlighting & syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " highlighting
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'embark-theme/vim', {'as': 'embark'}
+Plug 'sainnhe/sonokai'
 
 " Project and file management
 Plug 'lewis6991/gitsigns.nvim'
@@ -112,7 +112,7 @@ set backspace=indent,eol,start
 
 " Enable colorscheme and 256 colors
 set background=dark
-colorscheme embark
+colorscheme sonokai
 set t_Co=256
 set termguicolors
 
