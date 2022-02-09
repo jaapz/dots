@@ -1,25 +1,28 @@
-# Autostart script executed after i3 config is loaded. Largely stolen from the
-# default crunchbang openbox autostart script located in
-# ~/.config/openbox/autostart.
+# Autostart script executed after i3 config is loaded.
 
-## GNOME PolicyKit and Keyring
+# GNOME PolicyKit and Keyring
 eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 
-## Start Thunar Daemon
+# Start Thunar Daemon, enables faster startup time for thunar.
 thunar --daemon &
 
-## Start xscreensaver
-xautolock -time 10 -locker 'slock' &
+# Applets
+pasystray & # Volume control
+nm-applet & # Network manager
 
-## Set keyboard settings - 250 ms delay and 25 cps (characters per second) repeat rate.
-## Adjust the values according to your preferances.
-xset r rate 250 25 &
+# Set keyboard settings - 150ms delay and 30 cps (characters per second) repeat
+# rate. Adjust the values according to your preferences.
+xset r rate 150 30 &
 
-## Turn on/off system beep
+# Turn off system beep
 xset b off &
 
-# Start dunst notification daemon
-dunst &
+# Apply multi-monitor layout, ignore if it doesn't exist.
+if [ -e ~/.screenlayout/layout.sh ]
+then
+    ~/.screenlayout/layout.sh &
+fi
 
-## Set the background
-feh  --bg-fill '/home/jaapz/.wallpaper.png'
+# Set the background, sleep a bit to make sure previous layout has been
+# applied correctly.
+(sleep 2; feh  --bg-fill '/home/jaapz/.wallpaper.png')
