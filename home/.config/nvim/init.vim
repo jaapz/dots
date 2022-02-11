@@ -7,7 +7,6 @@ call plug#begin('~/.config/nvim/plugged')
 " LSP (+ linting)
 Plug 'neovim/nvim-lspconfig'
 Plug 'jose-elias-alvarez/null-ls.nvim'
-Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
 
 " Completion
 Plug 'hrsh7th/cmp-nvim-lsp'

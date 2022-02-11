@@ -21,10 +21,17 @@ require'lspconfig'.gopls.setup{
 vim.diagnostic.config({
     virtual_text = false,
     signs = false,
-    float = { border = "single" },
+    update_in_insert = true,
+    underline = true,
+    severity_sort = true,
+    float = {
+        focusable = false,
+        style = "minimal",
+        source = "always",
+        header = "",
+        prefix = "",
+    },
 })
-
-require("lsp_lines").register_lsp_virtual_lines()
 
 require("null-ls").setup({
     sources = {
