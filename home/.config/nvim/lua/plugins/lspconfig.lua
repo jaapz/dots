@@ -41,19 +41,13 @@ require("null-ls").setup({
         require("null-ls").builtins.formatting.prettier.with({
             disabled_filetypes = { "html.handlebars", },
         }),
-        require("null-ls").builtins.formatting.goimports,
+        require("null-ls").builtins.formatting.gofumpt,
         require("null-ls").builtins.diagnostics.eslint,
         require("null-ls").builtins.diagnostics.stylelint,
         require("null-ls").builtins.diagnostics.flake8,
         require("null-ls").builtins.diagnostics.golangci_lint.with({
             args = {
                 "run",
-                "--disable-all",
-                "--enable=misspell",
-                "--enable=godox",
-                "--enable=revive",
-                "--enable=govet",
-                "--exclude-use-default=false",
                 "--fix=false",
                 "--fast",
                 "--out-format=json",
