@@ -174,7 +174,7 @@ EOF
 " Autoformat code using null-ls and gopls.
 augroup FormatAugroup
 	autocmd!
-    autocmd BufWritePre * execute ':lua vim.lsp.buf.formatting_sync()'
+    autocmd BufWritePre * execute ':lua vim.lsp.buf.format()'
 	autocmd BufWritePre *.go :silent! lua org_imports(3000)
 augroup END
 

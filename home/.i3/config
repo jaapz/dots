@@ -12,12 +12,12 @@ set $mod Mod1
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # The font above is very space-efficient, that is, it looks good, sharp and
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
-font pango:Fira Mono 9
+font pango:Fira Mono 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -27,16 +27,14 @@ for_window [class="Cb-exit" instance="cb-exit"] floating enable
 bindsym $mod+m move workspace to output left
 bindsym $mod+n move workspace to output right
 
-# lock screen
-#bindsym $mod+semicolon exec i3lock -c 111111
-bindsym $mod+semicolon exec slock 
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
-# edit volume
-bindsym $mod+equal exec pulseaudio-ctl up
-bindsym $mod+minus exec pulseaudio-ctl down
-bindsym XF86AudioRaiseVolume exec pulseaudio-ctl up
-bindsym XF86AudioLowerVolume exec pulseaudio-ctl down
-bindsym XF86AudioMute exec pulseadio-ctl mute
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5 # decrease screen brightness
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
@@ -206,7 +204,7 @@ mode "$mode_system" {
     bindsym Escape mode "default"
 
     bindsym --release l exec --no-startup-id slock, mode "default"
-    bindsym --release s exec --no-startup-id slock systemctl suspend, mode "default"
+    bindsym --release s exec --no-startup-id slock systemctl hibernate, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
     bindsym Ctrl+s exec --no-startup-id systemctl poweroff -i, mode "default"
 }

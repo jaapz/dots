@@ -36,7 +36,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git git-extras colorize python gpg-agent fabric tmux homeshick extract)
+plugins=(git git-extras colorize python gpg-agent fabric tmux extract)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -49,16 +49,9 @@ fi
 
 # Useful aliases
 alias docker="sudo /usr/bin/docker"
-alias pynt="noglob pynt"
-alias irc-remote="ssh jaapz@broekhuizen.nu -t 'tmux attach -t weechat'"
-alias vims="vim --servername mbo"
-alias v="vim --servername mbo --remote-silent"
 
 source ~/.homesick/repos/virtualenv-tools/virtualenv.sh
 source ~/.homesick/repos/zsh-scripts/start-ssh-agent.sh
-source ~/.zsh/syncer.sh
-source ~/.zsh/mbo.sh
-source ~/.zsh/bam.sh
 
 export NVM_DIR="/home/jaapz/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -79,3 +72,8 @@ export LPASS_CLIPBOARD_COMMAND="xclip -selection primary -in"
 export LPASS_AGENT_TIMEOUT=0
 alias lpc="lpass show -c --password"
 alias lps="lpass ls | ag"
+
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"

@@ -1,4 +1,4 @@
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 require'lspconfig'.pyright.setup{
     capabilities = capabilities,
@@ -6,15 +6,15 @@ require'lspconfig'.pyright.setup{
 require'lspconfig'.tsserver.setup{
     capabilities = capabilities,
     on_attach = function(client, bufnr)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
+        client.server_capabilities.documentFormatting = false
+        client.server_capabilities.documentRangeFormatting = false 
     end,
 }
 require'lspconfig'.gopls.setup{
     capabilities = capabilities,
     on_attach = function(client, bufnr)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
+        client.server_capabilities.documentFormatting = false
+        client.server_capabilities.documentRangeFormatting = false
     end,
 }
 
@@ -34,6 +34,9 @@ vim.diagnostic.config({
 })
 
 require("null-ls").setup({
+    on_attach = function(client, bufnr)
+        vim.api.nvim_buf_set_option(bufnr, "formatexpr", "")
+    end,
     sources = {
         require("null-ls").builtins.formatting.black,
         require("null-ls").builtins.formatting.isort,
@@ -42,7 +45,7 @@ require("null-ls").setup({
             disabled_filetypes = { "html.handlebars", },
         }),
         require("null-ls").builtins.formatting.gofumpt,
-        require("null-ls").builtins.diagnostics.eslint,
+        require("null-ls").builtins.diagnostics.eslint_d,
         require("null-ls").builtins.diagnostics.stylelint,
         require("null-ls").builtins.diagnostics.flake8,
         require("null-ls").builtins.diagnostics.golangci_lint.with({
