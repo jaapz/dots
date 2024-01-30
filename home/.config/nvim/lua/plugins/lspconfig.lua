@@ -47,8 +47,8 @@ require("null-ls").setup({
         }),
         require("null-ls").builtins.formatting.gofumpt,
         require("null-ls").builtins.diagnostics.eslint_d,
-        require("null-ls").builtins.diagnostics.stylelint,
         require("null-ls").builtins.diagnostics.flake8,
+        require("null-ls").builtins.diagnostics.stylelint,
         require("null-ls").builtins.diagnostics.golangci_lint.with({
             args = {
                 "run",
