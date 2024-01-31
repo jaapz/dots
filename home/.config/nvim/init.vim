@@ -1,6 +1,10 @@
 " Jaapz's vim config.
 filetype off
 
+" Use nvim-specific pyenv 
+" Set up this pyenv using `pyenv virtualenv nvim 3.11.6`
+let g:python3_host_prog = '$HOME' . '/.pyenv/versions/nvim/bin/python3'
+ 
 " Plug setup
 call plug#begin('~/.config/nvim/plugged')
 
@@ -31,9 +35,6 @@ Plug 'tpope/vim-commentary'
 " Nicer statusline
 Plug 'NTBBloodbath/galaxyline.nvim'
 
-" EasyMotion, but better?
-Plug 'phaazon/hop.nvim'
-
 " Telescope (better Ctrl-P)
 Plug 'nvim-lua/popup.nvim'          " popup impl for telescope
 Plug 'nvim-lua/plenary.nvim'        " helper functions for telescope
@@ -52,7 +53,6 @@ require 'plugins.telescope'
 require 'plugins.lspconfig'
 require 'plugins.statusline'
 require 'plugins.gitsigns'
-require 'plugins.hop'
 require 'plugins.cmp'
 EOF
 
@@ -66,6 +66,7 @@ set nowrap
 set formatoptions-=t
 set splitbelow
 set cursorline
+set mouse= " Disable mouse integration
 
 " When opening a new buffer while the current one has changed and not saved,
 " just 'hide' it and switch to the new buffer, instead of opening the new
@@ -103,8 +104,8 @@ set wildignore+=*/tmp/*
 set wildignore+=*.swp
 
 " Show max text width
-set textwidth=79
-set colorcolumn=79,120
+set textwidth=88
+set colorcolumn=88,120
 
 " Allow more sane backspace behaviour
 set backspace=indent,eol,start
@@ -125,9 +126,7 @@ set grepprg=rg
 nnoremap <silent> <C-p> <cmd>Telescope find_files theme=ivy<CR>
 nnoremap <silent> <C-o> <cmd>Telescope live_grep theme=ivy<CR>
 nnoremap <silent> <C-s> <cmd>Telescope current_buffer_fuzzy_find theme=ivy<CR>
-nnoremap <silent> <C-b> <cmd>Telescope buffer theme=ivy<CR>
-nnoremap <silent> <C-f> <cmd>Telescope treesitter theme=ivy<CR>
-nnoremap <silent> <leader>b <cmd>Telescope buffers theme=ivy<CR>
+nnoremap <silent> <C-b> <cmd>Telescope buffers theme=ivy<CR>
 
 " nvim-lsp & nvim-cmp
 set signcolumn=no
@@ -135,19 +134,11 @@ set completeopt=menu,menuone,noselect
 set shortmess+=c
 set updatetime=300
 
-lua <<EOF
-vim.lsp.util.apply_text_document_edit = function(text_document_edit, index)
-  local text_document = text_document_edit.textDocument
-  local bufnr = vim.uri_to_bufnr(text_document.uri)
-
-  vim.lsp.util.apply_text_edits(text_document_edit.edits, bufnr)
-end
-EOF
-
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <leader>k <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> <c-d> <cmd>lua vim.diagnostic.open_float()<CR>
 nnoremap <silent> <c-f> <cmd>lua vim.diagnostic.setqflist()<CR>
 nnoremap <silent> <leader>a <cmd>lua vim.lsp.buf.code_action()<CR>
@@ -177,9 +168,6 @@ augroup FormatAugroup
     autocmd BufWritePre * execute ':lua vim.lsp.buf.format()'
 	autocmd BufWritePre *.go :silent! lua org_imports(3000)
 augroup END
-
-" Hop.nvim
-nnoremap <silent> <c-l> <cmd>HopLineStart<CR>
 
 " Buffer navigation
 noremap <leader>/ <Esc>:bn<CR>

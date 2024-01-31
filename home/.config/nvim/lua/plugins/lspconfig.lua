@@ -17,6 +17,9 @@ require'lspconfig'.gopls.setup{
         client.server_capabilities.documentRangeFormatting = false
     end,
 }
+require'lspconfig'.ruff_lsp.setup{
+    capabilities = capabilities,
+}
 
 vim.diagnostic.config({
     virtual_text = false,
@@ -38,8 +41,6 @@ require("null-ls").setup({
         vim.api.nvim_buf_set_option(bufnr, "formatexpr", "")
     end,
     sources = {
-        require("null-ls").builtins.formatting.black,
-        require("null-ls").builtins.formatting.isort,
         require("null-ls").builtins.formatting.stylelint,
         require("null-ls").builtins.formatting.prettier.with({
             disabled_filetypes = { "html.handlebars", },
