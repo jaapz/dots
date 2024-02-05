@@ -29,11 +29,15 @@ Plug 'sainnhe/sonokai'
 " Project and file management
 Plug 'lewis6991/gitsigns.nvim'
 
-" Easier commenting
+" Code editing
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sleuth'
 
 " Nicer statusline
 Plug 'NTBBloodbath/galaxyline.nvim'
+
+" Sticky header
+Plug 'nvim-treesitter/nvim-treesitter-context'
 
 " Telescope (better Ctrl-P)
 Plug 'nvim-lua/popup.nvim'          " popup impl for telescope
