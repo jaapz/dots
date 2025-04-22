@@ -196,6 +196,8 @@ client.unfocused    #000000 #000000 #979797
 client.urgent        #E41B17 #C60000 #FFFFFF
 
 for_window [class="Xfce4-notifyd"] floating enable; border none; focus mode_toggle
+for_window [window_role="alert"] floating enable
+no_focus [window_role="alert"]
 
 set $mode_system system [l|s|r|Ctrl+s]
 

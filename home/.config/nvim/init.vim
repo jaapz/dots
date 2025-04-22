@@ -4,13 +4,19 @@ filetype off
 " Use nvim-specific pyenv 
 " Set up this pyenv using `pyenv virtualenv nvim 3.11.6`
 let g:python3_host_prog = '$HOME' . '/.pyenv/versions/nvim/bin/python3'
- 
+
+" Disable deprecation warnings
+lua <<EOF
+vim.deprecate = function() end
+EOF
+
 " Plug setup
 call plug#begin('~/.config/nvim/plugged')
 
 " LSP (+ linting)
 Plug 'neovim/nvim-lspconfig'
-Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'nvimtools/none-ls.nvim'
+Plug 'nvimtools/none-ls-extras.nvim'
 
 " Completion
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -129,7 +135,7 @@ set grepprg=rg
 " Telescope
 nnoremap <silent> <C-p> <cmd>Telescope find_files theme=ivy<CR>
 nnoremap <silent> <C-o> <cmd>Telescope live_grep theme=ivy<CR>
-nnoremap <silent> <C-s> <cmd>Telescope current_buffer_fuzzy_find theme=ivy<CR>
+nnoremap <silent> <C-/> <cmd>Telescope current_buffer_fuzzy_find theme=ivy<CR>
 nnoremap <silent> <C-b> <cmd>Telescope buffers theme=ivy<CR>
 
 " nvim-lsp & nvim-cmp
@@ -138,9 +144,10 @@ set completeopt=menu,menuone,noselect
 set shortmess+=c
 set updatetime=300
 
-nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> gd <cmd>Telescope lsp_definitions theme=ivy<CR>
+nnoremap <silent> gy <cmd>Telescope lsp_type_definitions theme=ivy<CR>
+nnoremap <silent> gi <cmd>Telescope lsp_implementations<CR>
+nnoremap <silent> gr <cmd>Telescope lsp_references theme=ivy<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> <leader>k <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> <c-d> <cmd>lua vim.diagnostic.open_float()<CR>
@@ -166,11 +173,11 @@ lua <<EOF
   end
 EOF
 
-" Autoformat code using null-ls and gopls.
+" Format and lint on save
 augroup FormatAugroup
 	autocmd!
-    autocmd BufWritePre * execute ':lua vim.lsp.buf.format()'
-	autocmd BufWritePre *.go :silent! lua org_imports(3000)
+    autocmd BufWritePre * lua vim.lsp.buf.format()
+    autocmd BufWritePre *.go :silent! lua org_imports(3000)
 augroup END
 
 " Buffer navigation

@@ -18,6 +18,9 @@ xset r rate 150 30 &
 # Turn off system beep
 xset b off &
 
+# Less white more red
+redshift -P -O 5000 &
+
 # Apply multi-monitor layout, ignore if it doesn't exist.
 if [ -e ~/.screenlayout/layout.sh ]
 then
@@ -26,4 +29,4 @@ fi
 
 # Set the background, sleep a bit to make sure previous layout has been
 # applied correctly.
-(sleep 2; feh  --bg-fill '/home/jaapz/.wallpaper.png')
+(sleep 2; feh  --bg-fill '/home/jaapz/.wallpaper.jpg')

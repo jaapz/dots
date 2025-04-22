@@ -3,23 +3,24 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protoc
 require'lspconfig'.pyright.setup{
     capabilities = capabilities,
 }
-require'lspconfig'.tsserver.setup{
+require'lspconfig'.ts_ls.setup{
     capabilities = capabilities,
     on_attach = function(client, bufnr)
-        client.server_capabilities.documentFormatting = false
-        client.server_capabilities.documentRangeFormatting = false 
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false 
     end,
 }
 require'lspconfig'.gopls.setup{
     capabilities = capabilities,
     on_attach = function(client, bufnr)
-        client.server_capabilities.documentFormatting = false
-        client.server_capabilities.documentRangeFormatting = false
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
     end,
 }
-require'lspconfig'.ruff_lsp.setup{
+require'lspconfig'.ruff.setup{
     capabilities = capabilities,
 }
+require'lspconfig'.mdx_analyzer.setup{}
 
 vim.diagnostic.config({
     virtual_text = false,
@@ -46,18 +47,30 @@ require("null-ls").setup({
             disabled_filetypes = { "html.handlebars", },
         }),
         require("null-ls").builtins.formatting.gofumpt,
-        require("null-ls").builtins.diagnostics.eslint_d,
-        require("null-ls").builtins.diagnostics.flake8,
+        require("none-ls.formatting.eslint_d").with({
+            cwd=function(param)
+                require("null-ls.utils").root_pattern("package.json")(param.bufname)
+            end
+        }),
+        require("none-ls.diagnostics.eslint_d").with({
+            cwd=function(param)
+                require("null-ls.utils").root_pattern("package.json")(param.bufname)
+            end
+        }),
+        require("none-ls.code_actions.eslint_d").with({
+            cwd=function(param)
+                require("null-ls.utils").root_pattern("package.json")(param.bufname)
+            end
+        }),
+        require("none-ls.diagnostics.flake8"),
         require("null-ls").builtins.diagnostics.stylelint,
         require("null-ls").builtins.diagnostics.golangci_lint.with({
+            prefer_local = ".bin",
             args = {
                 "run",
                 "--fix=false",
                 "--fast",
                 "--out-format=json",
-                "$DIRNAME",
-                "--path-prefix",
-                "$ROOT",
             },
         }),
     },
