@@ -139,7 +139,7 @@ nnoremap <silent> <C-/> <cmd>Telescope current_buffer_fuzzy_find theme=ivy<CR>
 nnoremap <silent> <C-b> <cmd>Telescope buffers theme=ivy<CR>
 
 " nvim-lsp & nvim-cmp
-set signcolumn=no
+set signcolumn=number
 set completeopt=menu,menuone,noselect
 set shortmess+=c
 set updatetime=300
