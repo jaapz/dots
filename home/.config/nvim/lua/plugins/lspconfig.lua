@@ -1,26 +1,20 @@
-local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-require'lspconfig'.pyright.setup{
-    capabilities = capabilities,
-}
-require'lspconfig'.ts_ls.setup{
-    capabilities = capabilities,
-    on_attach = function(client, bufnr)
-        client.server_capabilities.documentFormattingProvider = false
-        client.server_capabilities.documentRangeFormattingProvider = false 
-    end,
-}
-require'lspconfig'.gopls.setup{
-    capabilities = capabilities,
-    on_attach = function(client, bufnr)
-        client.server_capabilities.documentFormattingProvider = false
-        client.server_capabilities.documentRangeFormattingProvider = false
-    end,
-}
-require'lspconfig'.ruff.setup{
-    capabilities = capabilities,
-}
-require'lspconfig'.mdx_analyzer.setup{}
+vim.lsp.config("ts_ls", {
+  on_attach = function(client, bufnr)
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
+  end
+})
+
+vim.lsp.enable({
+    'ty',
+    'ts_ls',
+    'gopls',
+    'ruff',
+}, {
+    capabilities = capabilities
+})
 
 vim.diagnostic.config({
     virtual_text = false,
