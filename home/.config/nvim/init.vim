@@ -34,10 +34,14 @@ Plug 'sainnhe/sonokai'
 
 " Project and file management
 Plug 'lewis6991/gitsigns.nvim'
+Plug 'tpope/vim-fugitive'
 
 " Code editing
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sleuth'
+Plug 'windwp/nvim-ts-autotag'
+Plug 'windwp/nvim-autopairs'
+Plug 'kylechui/nvim-surround'
 
 " Nicer statusline
 Plug 'NTBBloodbath/galaxyline.nvim'
@@ -64,6 +68,9 @@ require 'plugins.lspconfig'
 require 'plugins.statusline'
 require 'plugins.gitsigns'
 require 'plugins.cmp'
+
+require('nvim-ts-autotag').setup({})
+require('nvim-autopairs').setup({})
 EOF
 
 " Random basic settings

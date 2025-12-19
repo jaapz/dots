@@ -47,21 +47,9 @@ require("null-ls").setup({
             disabled_filetypes = { "html.handlebars", },
         }),
         require("null-ls").builtins.formatting.gofumpt,
-        require("none-ls.formatting.eslint_d").with({
-            cwd=function(param)
-                require("null-ls.utils").root_pattern("package.json")(param.bufname)
-            end
-        }),
-        require("none-ls.diagnostics.eslint_d").with({
-            cwd=function(param)
-                require("null-ls.utils").root_pattern("package.json")(param.bufname)
-            end
-        }),
-        require("none-ls.code_actions.eslint_d").with({
-            cwd=function(param)
-                require("null-ls.utils").root_pattern("package.json")(param.bufname)
-            end
-        }),
+        require("none-ls.formatting.eslint_d"),
+        require("none-ls.diagnostics.eslint_d"),
+        require("none-ls.code_actions.eslint_d"),
         require("none-ls.diagnostics.flake8"),
         require("null-ls").builtins.diagnostics.stylelint,
         require("null-ls").builtins.diagnostics.golangci_lint.with({
