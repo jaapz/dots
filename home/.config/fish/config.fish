@@ -11,7 +11,14 @@ if status is-interactive
     set fish_greeting
 
     alias docker="sudo /usr/bin/docker"
-    alias nvim='uv run nvim'
+    function nvim
+        if test -f ./pyproject.toml
+            echo "→ Detected pyproject.toml, running in uv environment"
+            uv run --frozen nvim $argv
+        else
+            command nvim $argv
+        end
+    end
 
     starship init fish | source
     zoxide init fish | source
