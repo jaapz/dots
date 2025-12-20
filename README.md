@@ -1,42 +1,27 @@
-Jaapz's Dotfiles
-================
+# Jaapz's Dotfiles
 
-I used to manually manage my dotfiles in a git repo with several branches. This
-became a big ugly mess of merges everywhere, so I decided to switch to a
-dotfile manager. I now use homeshick to manage the dotfiles in this repo, and I
-hope this won't end up as a huge mess.
+These are my dotfiles.
 
-How to install
---------------
+I'm currently using fish with starship as my shell and neovim as my editor. On my laptop
+I run wayland with sway, and on my work and home computers I am currently still running
+X and i3.
 
-Run the setup.sh file like this:
+## nvim
 
-    $ curl -s https://raw.githubusercontent.com/jaapz/dots/master/setup.sh | bash
+For neovim to work correctly with all plugins, on first install run `:PlugInstall`.
 
-Refer to the homeshick docs to see how new files should be added, and how files
-should be changed.
+For the LSP's and other integrations to work, make sure the following tools are installed:
 
-Included
---------
+- `ty` - add it to your virtualenv using uv, or use `uv tool` (`uv tool install ty@latest`)
+- `ruff` - add it to your virtualenv via uv, or use `uv tool` (`uv tool install ruff@latest`)
+- `flake8` - add it to your virtualenv via uv, or use `uv tool` (`uv tool install flake8@latest`)
+- `gopls` - should be installed with package manager
+- `golangci_lint` - should be installed in the `.tools` dir of your project
+- `ts_ls` - install globally using npm: `npm install -g typescript typescript-language-server`
+- `eslint_d` - install globally using npm: `npm install -g eslint_d`
+- `stylelint` - install globally using npm: `npm install -g stylelint`
+- `prettier` - install globally using npm: `npm install -g prettier`
 
-This repository contains my configurations for these tools:
+Highlighting is (mainly) done by tree-sitter, install it using via package manager:
 
- * vimperator
- * conky
- * i3
- * tmux
- * vim
- * neovim (still experimental)
- * zsh
-
-Neovim
-------
-
-For neovim and corresponding aliases to work correctly, make sure to [install
-neovim-remote](https://github.com/mhinz/neovim-remote#installation).
-
-Unison setup
-------------
-
-To set up unison for syncing files across your computers, run
-`backup/setup.sh`.
+`sudo pacman -S tree-sitter tree-sitter-cli`

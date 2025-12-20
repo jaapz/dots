@@ -1,8 +1,0 @@
-user_interface = "alternative"
-playlist_display_mode = "columns" (classic/columns)
-browser_display_mode = "classic" (classic/columns)
-search_engine_display_mode = "columns" (classic/columns)
-external_editor = "vim"
-progressbar_look = "━━ "
-colors_enabled = "yes"
-main_window_color = "white"

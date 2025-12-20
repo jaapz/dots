@@ -7,6 +7,14 @@ vim.lsp.config("ts_ls", {
   end
 })
 
+vim.lsp.config("gopls", {
+    settings = {
+        gopls = {
+            gofumpt = true
+        }
+    }
+})
+
 vim.lsp.enable({
     'ty',
     'ts_ls',
@@ -40,14 +48,13 @@ require("null-ls").setup({
         require("null-ls").builtins.formatting.prettier.with({
             disabled_filetypes = { "html.handlebars", },
         }),
-        require("null-ls").builtins.formatting.gofumpt,
         require("none-ls.formatting.eslint_d"),
         require("none-ls.diagnostics.eslint_d"),
         require("none-ls.code_actions.eslint_d"),
         require("none-ls.diagnostics.flake8"),
         require("null-ls").builtins.diagnostics.stylelint,
         require("null-ls").builtins.diagnostics.golangci_lint.with({
-            prefer_local = ".bin",
+            prefer_local = ".tools",
             args = {
                 "run",
                 "--fix=false",

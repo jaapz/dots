@@ -33,4 +33,4 @@ require'treesitter-context'.setup{
   enable=true,
 }
 
-require('nvim-treesitter').install(filetypes):wait(300000) -- wait max. 5 minutes
+require'nvim-treesitter'.install(parsers)

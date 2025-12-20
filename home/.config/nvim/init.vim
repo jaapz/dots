@@ -1,10 +1,6 @@
 " Jaapz's vim config.
 filetype off
 
-" Use nvim-specific pyenv 
-" Set up this pyenv using `pyenv virtualenv nvim 3.11.6`
-let g:python3_host_prog = '$HOME' . '/.pyenv/versions/nvim/bin/python3'
-
 " Disable deprecation warnings
 lua <<EOF
 vim.deprecate = function() end
