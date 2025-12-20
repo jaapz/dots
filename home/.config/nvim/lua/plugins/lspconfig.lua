@@ -25,7 +25,8 @@ vim.lsp.enable({
 })
 
 vim.diagnostic.config({
-    virtual_text = false,
+    virtual_text = true,
+    virtual_lines = false,
     signs = false,
     update_in_insert = true,
     underline = true,
