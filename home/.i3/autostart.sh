@@ -10,23 +10,10 @@ thunar --daemon &
 pasystray & # Volume control
 nm-applet & # Network manager
 udiskie --no-automount --no-notify --tray &
+blueman-applet &
 
-# Set keyboard settings - 150ms delay and 30 cps (characters per second) repeat
-# rate. Adjust the values according to your preferences.
-xset r rate 150 30 &
+# background image
+swaybg -i ~/.wallpaper.png --mode fill &
 
-# Turn off system beep
-xset b off &
-
-# Less white more red
-redshift -P -O 5000 &
-
-# Apply multi-monitor layout, ignore if it doesn't exist.
-if [ -e ~/.screenlayout/layout.sh ]
-then
-    ~/.screenlayout/layout.sh &
-fi
-
-# Set the background, sleep a bit to make sure previous layout has been
-# applied correctly.
-(sleep 2; feh  --bg-fill '/home/jaapz/.wallpaper.jpg')
+# notifications deamon
+mako &

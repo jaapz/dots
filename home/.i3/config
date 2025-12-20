@@ -10,6 +10,9 @@
 
 set $mod Mod1
 
+output eDP-1 scale 1.6
+output eDP-1 mode 2944x1840@89.999Hz
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -17,11 +20,15 @@ set $mod Mod1
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
-font pango:Fira Mono 11
+font pango:Fira Mono Nerd Font Mono 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
-for_window [class="Cb-exit" instance="cb-exit"] floating enable
+# for_window [class="Cb-exit" instance="cb-exit"] floating enable
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="dialog"] floating enable
+for_window [window_type="dialog"] floating enable
 
 # Move workspace
 bindsym $mod+m move workspace to output left
@@ -33,8 +40,8 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #d
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 5 # decrease screen brightness
+bindsym XF86MonBrightnessUp exec brillo -A 10
+bindsym XF86MonBrightnessDown exec brillo -U 10
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
@@ -44,26 +51,16 @@ bindsym $mod+Return exec alacritty
 # kill focused window
 bindsym $mod+Shift+q kill
 
-bindsym $mod+d exec rofi -show run -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
-bindsym $mod+Shift+d exec rofi -show window -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
-bindsym mod4+d exec rofi -show ssh -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
-bindsym $mod+p exec LPASS_CLIPBOARD_COMMAND="xclip -selection primary -in" lpass show -c --password $(lpass ls  | rofi -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -dmenu -i | awk '{print $(NF)}' | sed 's/\]//g')
+bindsym $mod+d exec tofi-run | xargs swaymsg exec --
+bindsym $mod+Shift+d exec tofi-drun | xargs swaymsg exec --
+# bindsym $mod+d exec rofi -show run -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
+# bindsym $mod+Shift+d exec rofi -show window -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
+# bindsym mod4+d exec rofi -show ssh -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -terminal st
+# bindsym $mod+p exec LPASS_CLIPBOARD_COMMAND="xclip -selection primary -in" lpass show -c --password $(lpass ls  | rofi -font "Fira Mono 16" -bg "#111" -fg "#ddd" -hlbg "#222" -fuzzy -hide-scrollbar -dmenu -i | awk '{print $(NF)}' | sed 's/\]//g')
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-
-# spotify controls
-#bindsym $mod+F11 exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
-#bindsym $mod+F12 exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
-#bindsym $mod+F10 exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop
-#bindsym $mod+F9 exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
-
-# mpd controls
-bindsym $mod+F11 exec mpc toggle
-bindsym $mod+F12 exec mpc next
-bindsym $mod+F10 exec mpc prev
-bindsym $mod+F9 exec mpc stop
 
 bindsym $mod+h focus left
 bindsym $mod+j focus down
@@ -114,6 +111,9 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
+# screenshot
+bindsym $mod+p exec grim -g "$(slurp)" - | swappy -f -
+
 # switch to workspace
 bindsym $mod+1 workspace 1
 bindsym $mod+2 workspace 2
@@ -149,11 +149,6 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 bindsym mod4+Shift+s move scratchpad
 bindsym mod4+s scratchpad show
 
-# screen brightness
-bindsym $mod+F5 exec "xbacklight -dec 5"
-bindsym $mod+F6 exec "xbacklight -inc 5"
-
-
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
@@ -186,6 +181,7 @@ bar {
         position top
         status_command $HOME/.i3/conky.sh
         tray_output primary
+        swaybar_command waybar
 }
 
 
@@ -199,23 +195,25 @@ for_window [class="Xfce4-notifyd"] floating enable; border none; focus mode_togg
 for_window [window_role="alert"] floating enable
 no_focus [window_role="alert"]
 
-set $mode_system system [l|s|r|Ctrl+s]
+set $mode_system system [l|r|Ctrl+s]
 
 mode "$mode_system" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 
-    bindsym --release l exec --no-startup-id slock, mode "default"
-    bindsym --release s exec --no-startup-id slock systemctl hibernate, mode "default"
+    bindsym --release l exec --no-startup-id swaylock --color 0x000000, mode "default"
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
     bindsym Ctrl+s exec --no-startup-id systemctl poweroff -i, mode "default"
 }
 
 bindsym $mod+BackSpace mode "$mode_system"
 
-new_window 1pixel
+# new_window 1pixel # deprecated by sway
+default_border pixel 1
 
 focus_on_window_activation urgent
+
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 # Autostart these services
 exec ~/.i3/autostart.sh
