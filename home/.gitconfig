@@ -10,6 +10,13 @@
 	format = ssh
 [commit]
 	gpgsign = true
+[interactive]
+        diffFilter = delta --color-only
+[delta]
+        navigate = true
+        dark = true
+        side-by-side = true
+        line-numbers = true
 
 # copied from https://blog.gitbutler.com/how-git-core-devs-configure-git/
 ## clearly makes git better
@@ -55,7 +62,4 @@
         fsmonitor = true
         untrackedCache = true
 [merge]
-        # (just 'diff3' if git version < 2.3)
         conflictstyle = zdiff3 
-[pull]
-        # rebase = true
