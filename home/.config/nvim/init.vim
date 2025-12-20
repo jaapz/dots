@@ -25,7 +25,6 @@ Plug 'hrsh7th/vim-vsnip'
 
 " Highlighting & syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " highlighting
-Plug 'mustache/vim-mustache-handlebars'
 Plug 'sainnhe/sonokai'
 
 " Project and file management
@@ -34,7 +33,6 @@ Plug 'tpope/vim-fugitive'
 
 " Code editing
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-sleuth'
 Plug 'windwp/nvim-ts-autotag'
 Plug 'windwp/nvim-autopairs'
 Plug 'kylechui/nvim-surround'
@@ -44,6 +42,10 @@ Plug 'NTBBloodbath/galaxyline.nvim'
 
 " Sticky header
 Plug 'nvim-treesitter/nvim-treesitter-context'
+
+" Leipe UI tjak
+Plug 'MunifTanjim/nui.nvim'
+Plug 'folke/noice.nvim'
 
 " Telescope (better Ctrl-P)
 Plug 'nvim-lua/popup.nvim'          " popup impl for telescope
@@ -64,9 +66,8 @@ require 'plugins.lspconfig'
 require 'plugins.statusline'
 require 'plugins.gitsigns'
 require 'plugins.cmp'
-
-require('nvim-ts-autotag').setup({})
-require('nvim-autopairs').setup({})
+require 'plugins.noice'
+require 'plugins.other'
 EOF
 
 " Random basic settings
