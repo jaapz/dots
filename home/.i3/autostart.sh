@@ -9,7 +9,8 @@ thunar --daemon &
 # Applets
 pasystray & # Volume control
 nm-applet & # Network manager
-udiskie --no-automount --no-notify --tray &
+udiskie --no-automount --no-notify --tray & # disk manager
+blueman-applet & # bluetooth
 
 # Set keyboard settings - 150ms delay and 30 cps (characters per second) repeat
 # rate. Adjust the values according to your preferences.
