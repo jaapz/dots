@@ -19,6 +19,9 @@ xset r rate 150 30 &
 # Turn off system beep
 xset b off &
 
+# Set compose key to windows key
+setxkbmap -option compose:lwin &
+
 # Less white more red
 redshift -P -O 5000 &
 
