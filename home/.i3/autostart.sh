@@ -12,6 +12,9 @@ nm-applet & # Network manager
 udiskie --no-automount --no-notify --tray & # disk manager
 blueman-applet & # bluetooth
 
+# Notification daemon
+dunst &
+
 # Set keyboard settings - 150ms delay and 30 cps (characters per second) repeat
 # rate. Adjust the values according to your preferences.
 xset r rate 150 30 &
