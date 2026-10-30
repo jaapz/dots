@@ -1,0 +1,62 @@
+# Make Ghostty look and behave like a default Alacritty 0.17 setup.
+# Reload with Ctrl+Shift+, (font changes may need a new window).
+# All options: `ghostty +show-config --default --docs`
+
+# --- Font ---------------------------------------------------------------
+# Same font as alacritty.toml. Ghostty would otherwise use its bundled
+# JetBrains Mono at 12pt.
+# Alacritty's default 11.25pt plus one Ctrl+= step. Alacritty's own
+# effective size differs: with no Xft.dpi set, winit derives a 1.25 scale
+# factor from the 2560x1440 monitor's physical size, while Ghostty renders
+# at 1.0.
+font-family = FiraCode Nerd Font Mono
+font-size = 12.25
+# One pixel taller lines than Ghostty computes for this font.
+adjust-cell-height = 1
+# Alacritty does not render ligatures.
+font-feature = -calt, -liga, -dlig
+
+# --- Colors (Alacritty's built-in default scheme) -----------------------
+background = #181818
+foreground = #d8d8d8
+
+palette = 0=#181818
+palette = 1=#ac4242
+palette = 2=#90a959
+palette = 3=#f4bf75
+palette = 4=#6a9fb5
+palette = 5=#aa759f
+palette = 6=#75b5aa
+palette = 7=#d8d8d8
+palette = 8=#6b6b6b
+palette = 9=#c55555
+palette = 10=#aac474
+palette = 11=#feca88
+palette = 12=#82b8c8
+palette = 13=#c28cb8
+palette = 14=#93d3c3
+palette = 15=#f8f8f8
+
+# Alacritty inverts the cell under the cursor and in the selection.
+cursor-color = cell-foreground
+cursor-text = cell-background
+selection-foreground = cell-background
+selection-background = cell-foreground
+
+# --- Cursor -------------------------------------------------------------
+# Solid, non-blinking block (programs can still change it).
+cursor-style = block
+cursor-style-blink = false
+# Stop shell integration from switching to a bar cursor at the prompt.
+shell-integration-features = no-cursor
+
+# --- Window chrome ------------------------------------------------------
+# No GTK header bar; let i3 draw its own title bar/borders like it does
+# for Alacritty.
+window-decoration = server
+gtk-titlebar = false
+window-padding-x = 0
+window-padding-y = 0
+scrollbar = never
+resize-overlay = never
+confirm-close-surface = false
