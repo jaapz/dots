@@ -13,8 +13,6 @@ font-family = FiraCode Nerd Font Mono
 font-size = 12.25
 # One pixel taller lines than Ghostty computes for this font.
 adjust-cell-height = 1
-# Alacritty does not render ligatures.
-font-feature = -calt, -liga, -dlig
 
 # --- Colors (Alacritty's built-in default scheme) -----------------------
 background = #181818
