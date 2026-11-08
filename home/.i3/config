@@ -112,7 +112,9 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 # screenshot
-bindsym $mod+p exec grim -g "$(slurp)" - | swappy -f -
+bindsym $mod+p exec flameshot gui
+# flameshot's capture overlay must float over the whole output instead of tiling
+for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
 
 # switch to workspace
 bindsym $mod+1 workspace 1

@@ -11,6 +11,7 @@ pasystray & # Volume control
 nm-applet & # Network manager
 udiskie --no-automount --no-notify --tray &
 blueman-applet &
+flameshot & # Screenshot tool
 
 # background image
 swaybg -i ~/.wallpaper.png --mode fill &
