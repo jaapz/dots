@@ -18,3 +18,6 @@ swaybg -i ~/.wallpaper.png --mode fill &
 
 # notifications deamon
 mako &
+
+# Apply per-location monitor layouts (~/.config/kanshi/config)
+kanshi &

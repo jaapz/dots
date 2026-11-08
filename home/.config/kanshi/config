@@ -1,0 +1,12 @@
+# Outputs are matched on make/model/serial, so the layout still applies
+# when the dock hands out different DP-* names.
+
+profile laptop {
+	output eDP-1 enable mode 2944x1840@89.999Hz scale 1.6 position 0,0
+}
+
+profile work {
+	output eDP-1 enable mode 2944x1840@89.999Hz scale 1.6 position 0,741
+	output "Samsung Electric Company LS24D60xU HNAYC00247" enable mode 2560x1440 scale 1.0 position 1838,0
+	output "Samsung Electric Company LS24D60xU HNAYC00253" enable mode 2560x1440 scale 1.2 transform 90 position 4398,0
+}
