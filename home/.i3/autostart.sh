@@ -11,6 +11,7 @@ pasystray & # Volume control
 nm-applet & # Network manager
 udiskie --no-automount --no-notify --tray & # disk manager
 blueman-applet & # bluetooth
+flameshot & # Screenshot tool
 
 # Notification daemon
 dunst &
