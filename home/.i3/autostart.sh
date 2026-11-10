@@ -25,6 +25,9 @@ setxkbmap -option compose:lwin &
 # Less white more red
 redshift -P -O 5000 &
 
+# Screenshots
+flameshot &
+
 # Apply multi-monitor layout, ignore if it doesn't exist.
 if [ -e ~/.screenlayout/layout.sh ]
 then
