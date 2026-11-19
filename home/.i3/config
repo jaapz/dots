@@ -200,7 +200,7 @@ for_window [class="Xfce4-notifyd"] floating enable; border none; focus mode_togg
 for_window [window_role="alert"] floating enable
 # flameshot multi-monitor select screen (the capture overlay is a utility window, which i3 floats already)
 for_window [class="flameshot" window_type="normal" title="^flameshot$"] floating enable
-for_window [class="(?i)^pqiv$"] floating enable, move position center
+for_window [class="feh"] floating enable, move position center
 no_focus [window_role="alert"]
 
 set $mode_system system [l|s|r|Ctrl+s]
