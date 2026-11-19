@@ -1,0 +1,5 @@
+# Scroll zooms instead of switching images
+zoom_in 4
+zoom_out 5
+prev_img
+next_img
