@@ -14,32 +14,9 @@ font-size = 12.25
 # One pixel taller lines than Ghostty computes for this font.
 adjust-cell-height = 1
 
-# --- Colors (Alacritty's built-in default scheme) -----------------------
-background = #181818
-foreground = #d8d8d8
-
-palette = 0=#181818
-palette = 1=#ac4242
-palette = 2=#90a959
-palette = 3=#f4bf75
-palette = 4=#6a9fb5
-palette = 5=#aa759f
-palette = 6=#75b5aa
-palette = 7=#d8d8d8
-palette = 8=#6b6b6b
-palette = 9=#c55555
-palette = 10=#aac474
-palette = 11=#feca88
-palette = 12=#82b8c8
-palette = 13=#c28cb8
-palette = 14=#93d3c3
-palette = 15=#f8f8f8
-
-# Alacritty inverts the cell under the cursor and in the selection.
-cursor-color = cell-foreground
-cursor-text = cell-background
-selection-foreground = cell-background
-selection-background = cell-foreground
+# --- Colors -------------------------------------------------------------
+# Ghostty's built-in Sonokai matches Herdr's sonokai terminal theme.
+theme = Sonokai
 
 # --- Cursor -------------------------------------------------------------
 # Solid, non-blinking block (programs can still change it).
