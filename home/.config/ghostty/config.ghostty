@@ -46,7 +46,9 @@ selection-background = cell-foreground
 cursor-style = block
 cursor-style-blink = false
 # Stop shell integration from switching to a bar cursor at the prompt.
-shell-integration-features = no-cursor
+# ssh-terminfo installs Ghostty's terminfo entry on hosts you ssh into;
+# ssh-env falls back to TERM=xterm-256color where that isn't possible.
+shell-integration-features = no-cursor,ssh-terminfo,ssh-env
 
 # --- Window chrome ------------------------------------------------------
 # No GTK header bar; let i3 draw its own title bar/borders like it does
